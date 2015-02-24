@@ -1,0 +1,61 @@
+#==================
+#   MoneyThief
+#==================
+
+#==================
+#       PVP
+#==================
+
+#The percentage of money that is taken from the victim
+gained: 10
+#The percentage of the previous percentage that is lost into nothingness (does NOT go to killer)
+lost: 10
+
+#Messages that go to killer and victim upon player kill event
+pk:
+  killerone: "&6You killed %VICTIM, and looted $%MONEYGAINED off of the body."
+  victimone: "&6You were killed by %KILLER."
+  victimtwo: "&6You lost $%MONEYTAKEN, and $%MONEYLOST disappeared into the aether."
+
+#Messages that go to the killer upon mob kill event
+mk:
+             #Set to "none" (with quotations) to disable
+  killer: "&6You gained $%MONEYGAINED for killing %MOBNAME."
+             #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
+
+#==================
+#      PVE
+#==================
+
+mobs: #Mobs are expandable. If I've missed one, simply put it's name below
+#Passive Mobs
+  PIG: 5.0
+  COW: 5.0
+  SHEEP: 5.0
+  CHICKEN: 5.0
+  BAT: 5.0
+  RABBIT: 5.0
+  SNOWMAN: 5.0
+  IRON_GOLEM: 5.0
+  MUSHROOM_COW: 5.0
+  OCELOT: 5.0
+  SQUID: 5.0
+  VILLAGER: 5.0
+  WOLF: 5.0
+  HORSE: 5.0
+#Hostile Mobs
+  CAVE_SPIDER: 10.0
+  CREEPER: 10.0
+  SKELETON: 10.0
+  ZOMBIE: 10.0
+  ENDER_DRAGON: 150.0
+  ENDERMAN: 10.0
+  ENDERMITE: 5.0
+  GHAST: 10.0
+  GUARDIAN: 10.0
+  MAGMA_CUBE: 10.0
+  PIG_ZOMBIE: 10.0
+  SILVERFISH: 5.0
+  SPIDER: 10.0
+  WITCH: 10.0
+  WITHER: 150.0
