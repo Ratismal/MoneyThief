@@ -1,0 +1,2 @@
+# MoneyThief
+MoneyThief plugin - Bukkit
