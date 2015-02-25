@@ -1,5 +1,7 @@
 package io.github.ratismal.moneythief;
 
+//import java.util.logging.Logger;
+
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -11,6 +13,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class PlayerKillerListener implements Listener {
 	
+	//private Logger log = Logger.getLogger("Minecraft");
 	private Economy econ;
 	FileConfiguration config = MoneyThief.plugin.getConfig();
 	public PlayerKillerListener (MoneyThief instance) {
@@ -21,9 +24,9 @@ public class PlayerKillerListener implements Listener {
 	Player killed = null;
 	double gained = config.getDouble("gained");
 	double lost = config.getDouble("lost");
-	String toKiller = config.getString("pk.tokiller");
-	String toVictimOne = config.getString("pk.tovictimone");
-	String toVictimTwo = config.getString("pk.tovictimtwo");
+	String toKiller = config.getString("pk.killerone");
+	String toVictimOne = config.getString("pk.victimone");
+	String toVictimTwo = config.getString("pk.victimtwo");
 	
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
@@ -49,12 +52,21 @@ public class PlayerKillerListener implements Listener {
 			moneyGiven = Math.round(moneyGiven * 100) / 100;
 			taken = Math.round(taken * 100) / 100;
 			moneyLost = Math.round(moneyLost * 100) / 100;
-
-			toKiller = toKiller.replaceAll("%VICTIM", killed.getDisplayName());
+			
+			String killedName = killed.getDisplayName();
+			String killerName = killer.getDisplayName();
+			
+			/*
+			log.info(toKiller);
+			log.info(toVictimOne);
+			log.info(toVictimTwo);
+			*/
+			
+			toKiller = toKiller.replaceAll("%VICTIM", killedName);
 			toKiller = toKiller.replaceAll("%MONEYGAINED", Double.toString(moneyGiven));
 			toVictimTwo = toVictimTwo.replaceAll("%MONEYTAKEN", Double.toString(taken));
 			toVictimTwo = toVictimTwo.replaceAll("%MONEYLOST", Double.toString(moneyLost));
-			toVictimOne = toVictimOne.replaceAll("%KILLER", killer.getDisplayName());
+			toVictimOne = toVictimOne.replaceAll("%KILLER", killerName);
 			toKiller = ChatColor.translateAlternateColorCodes('&', toKiller);
 			toVictimOne = ChatColor.translateAlternateColorCodes('&', toVictimOne);
 			toVictimTwo = ChatColor.translateAlternateColorCodes('&', toVictimTwo);

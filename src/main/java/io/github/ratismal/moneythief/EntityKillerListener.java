@@ -1,8 +1,6 @@
 package io.github.ratismal.moneythief;
 
 import java.util.Map;
-import java.util.logging.Logger;
-
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class EntityKillerListener implements Listener {
@@ -25,8 +22,6 @@ public class EntityKillerListener implements Listener {
 		mobValues = instance.mobValues;
 	}
 	FileConfiguration config = MoneyThief.plugin.getConfig();
-	private Logger log = Logger.getLogger("Minecraft");
-	
 	@EventHandler
 	public void onDeath(EntityDeathEvent event) {
 		if (event.getEntity().getKiller() instanceof Player) {
