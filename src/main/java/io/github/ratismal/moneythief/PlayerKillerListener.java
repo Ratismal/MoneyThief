@@ -1,32 +1,31 @@
 package io.github.ratismal.moneythief;
 
-import java.util.Map;
-
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-
-
-public final class PlayerKillerListener implements Listener {
+public class PlayerKillerListener implements Listener {
 	
+	private Economy econ;
+	FileConfiguration config = MoneyThief.plugin.getConfig();
+	public PlayerKillerListener (MoneyThief instance) {
+		econ = instance.econ;
+	}
 	
-	Economy econ = MoneyThief.econ;
 	Player killer = null;
 	Player killed = null;
-	public Map<String, Object> configValues = MoneyThief.configValues;
-	double gained = Double.parseDouble("" + configValues.get("gained"));
-	double lost = Double.parseDouble("" + configValues.get("lost"));
-	String toKiller = "" + configValues.get("pk.tokiller");
-	String toVictimOne = "" + configValues.get("pk.tovictimone");
-	String toVictimTwo = "" + configValues.get("pk.tovictimtwo");
+	double gained = config.getDouble("gained");
+	double lost = config.getDouble("lost");
+	String toKiller = config.getString("pk.tokiller");
+	String toVictimOne = config.getString("pk.tovictimone");
+	String toVictimTwo = config.getString("pk.tovictimtwo");
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		if (event.getEntity().getKiller() instanceof Player) {
 		Player killed = event.getEntity();

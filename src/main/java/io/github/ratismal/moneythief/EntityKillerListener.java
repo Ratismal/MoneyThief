@@ -1,24 +1,33 @@
 package io.github.ratismal.moneythief;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-public final class EntityKillerListener implements Listener {
+public class EntityKillerListener implements Listener {
 
-	Economy econ = MoneyThief.econ;	
-	public Map<String, Object> mobValues = MoneyThief.mobValues;
-	public Map<String, Object> configValues = MoneyThief.configValues;
+	MoneyThief plugin;
+	Economy econ;
+	private Map<String, Object> mobValues;
+	EntityKillerListener (MoneyThief instance) {
+		plugin = instance;
+		econ = instance.econ;
+		mobValues = instance.mobValues;
+	}
+	FileConfiguration config = MoneyThief.plugin.getConfig();
+	private Logger log = Logger.getLogger("Minecraft");
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onDeath(EntityDeathEvent event) {
 		if (event.getEntity().getKiller() instanceof Player) {
 			if (!(event.getEntity() instanceof Player)) {
@@ -29,7 +38,7 @@ public final class EntityKillerListener implements Listener {
 				if (worth != null) {
 					double money = Double.parseDouble(worth);
 					econ.depositPlayer(killer, money);
-					if (!("" + configValues.get("mk.killer")).equals("none")) {
+					if (!(config.getString("mk.killer")).equals("none")) {
 						String firstLetter = entity.substring(0,1).toLowerCase();
 						if ((firstLetter).equals("a") || (firstLetter).equals("e") || 
 								(firstLetter).equals("i") || (firstLetter).equals("o")) {
@@ -39,7 +48,7 @@ public final class EntityKillerListener implements Listener {
 							entity = "a " + entity;
 						}
 						money = Math.round(money * 100) / 100;
-						String tokiller = "" + configValues.get("mk.killer");
+						String tokiller = config.getString("mk.killer");
 						entity = entity.replaceAll("_", " ");
 						tokiller = tokiller.replaceAll("%MONEYGAINED", Double.toString(money));
 						tokiller = tokiller.replaceAll("%MOBNAME", entity);

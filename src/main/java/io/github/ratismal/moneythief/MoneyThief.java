@@ -17,15 +17,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.ratismal.moneythief.PlayerKillerListener;
 
-public final class MoneyThief extends JavaPlugin {
+public class MoneyThief extends JavaPlugin {
 	
-	private static final Logger log = Logger.getLogger("Minecraft");
-    public static Economy econ = null;
-    public static Map<String, Object> configValues = new HashMap<String, Object>();
-    public static Map<String, Object> mobValues = new HashMap<String, Object>();
+	public static MoneyThief plugin;
+	private Logger log = Logger.getLogger("Minecraft");
+    public Economy econ = null;
+    public Map<String, Object> configValues = new HashMap<String, Object>();
+    public Map<String, Object> mobValues = new HashMap<String, Object>();
     
 	@Override
     public void onEnable() {
+		
+		
+		getLogger().info("[MoneyThief] onEnable has been invoked!");
+		plugin = this;
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		
@@ -33,16 +38,16 @@ public final class MoneyThief extends JavaPlugin {
 		getConfig();
 	    configValues = this.getConfig().getConfigurationSection("").getValues(true);
 	    mobValues = this.getConfig().getConfigurationSection("mobs").getValues(true);
-	    
-		getLogger().info("[MoneyThief] onEnable has been invoked!");
+
 		if (!setupEconomy() ) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-		pm.registerEvents(new PlayerKillerListener(), this);
-		pm.registerEvents(new EntityKillerListener(), this);
-		
+		pm.registerEvents(new PlayerKillerListener(this), this);
+		log.info("[MoneyThief] Player Listener Enabled");
+		pm.registerEvents(new EntityKillerListener(this), this);
+		log.info("[MoneyThief] Entity Listener Enabled");
 		
 	}
  
