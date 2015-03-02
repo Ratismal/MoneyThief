@@ -1,10 +1,10 @@
 name: MoneyThief
 main: io.github.ratismal.moneythief.MoneyThief
-version: 1.1.5
+version: 1.1.8
 depend: [Vault]
 commands:
   moneythief:
       description: Base MoneyThief command.
-      usage: /moneythief [arg]
+      usage: Uh oh, something went wrong! Try doing /moneythief
       permission: moneythief
       permission-message: Bugger off, you don't have the rights to do that!

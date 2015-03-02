@@ -12,50 +12,117 @@ gained: 10
 lost: 10
 
 #Messages that go to killer and victim upon player kill event
-pk:
-  killerone: "&6You killed %VICTIM, and looted $%MONEYGAINED off of the body."
-  victimone: "&6You were killed by %KILLER."
+pk: #Set any of the messages to "none" to disable them.
+    #After %VICTIM or %KILLER, you need to put back the colour code.
+    #This is due to how minecraft puts a reset code at the end of usernames.
+  killerone: "&6You killed %VICTIM&6, and looted $%MONEYGAINED off of the body."
+  victimone: "&6You were killed by %KILLER&6."
   victimtwo: "&6You lost $%MONEYTAKEN, and $%MONEYLOST disappeared into the aether."
+  #Messages that are sent when the victim has no money
+  killerzero: "&6You killed %VICTIM&6, but they had no money to loot."
+  victimzero: "&6You were killed by %KILLER&6, but you had nothing to lose!"
 
 #Messages that go to the killer upon mob kill event
-mk:
-             #Set to "none" (with quotations) to disable
+mk: #Set to "none" to disable
   killer: "&6You gained $%MONEYGAINED for killing %MOBNAME."
              #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
+             
+#Message that is sent if a player runs a command they don't have perms for
+noperms: "&4Bugger off, you don't have the right permissions!"
 
 #==================
 #      PVE
 #==================
 
 mobs: #Mobs are expandable. If I've missed one, simply put it's name below
+      #Mobs have two values, a high and a low. The value given to the killer
+      #  randomly set between the two values.
 #Passive Mobs
-  PIG: 5.0
-  COW: 5.0
-  SHEEP: 5.0
-  CHICKEN: 5.0
-  BAT: 5.0
-  RABBIT: 5.0
-  SNOWMAN: 5.0
-  IRON_GOLEM: 5.0
-  MUSHROOM_COW: 5.0
-  OCELOT: 5.0
-  SQUID: 5.0
-  VILLAGER: 5.0
-  WOLF: 5.0
-  HORSE: 5.0
+  PIG:
+  - 5.0
+  - 10.0
+  COW:
+  - 5.0
+  - 10.0
+  SHEEP:
+  - 5.0
+  - 10.0
+  CHICKEN:
+  - 5.0
+  - 10.0
+  BAT: 
+  - 5.0
+  - 10.0
+  RABBIT:
+  - 5.0
+  - 10.0
+  SNOWMAN:
+  - 5.0
+  - 10.0
+  IRON_GOLEM:
+  - 5.0
+  - 10.0
+  MUSHROOM_COW:
+  - 5.0
+  - 10.0
+  OCELOT:
+  - 5.0
+  - 10.0
+  SQUID:
+  - 5.0
+  - 10.0
+  VILLAGER:
+  - 5.0
+  - 10.0
+  WOLF:
+  - 5.0
+  - 10.0
+  HORSE:
+  - 5.0
+  - 10.0
 #Hostile Mobs
-  CAVE_SPIDER: 10.0
-  CREEPER: 10.0
-  SKELETON: 10.0
-  ZOMBIE: 10.0
-  ENDER_DRAGON: 150.0
-  ENDERMAN: 10.0
-  ENDERMITE: 5.0
-  GHAST: 10.0
-  GUARDIAN: 10.0
-  MAGMA_CUBE: 10.0
-  PIG_ZOMBIE: 10.0
-  SILVERFISH: 5.0
-  SPIDER: 10.0
-  WITCH: 10.0
-  WITHER: 150.0
+  CAVE_SPIDER: 
+  - 10.0
+  - 20.0
+  CREEPER:  
+  - 10.0
+  - 20.0
+  SKELETON:  
+  - 10.0
+  - 20.0
+  ZOMBIE:  
+  - 10.0
+  - 20.0
+  ENDER_DRAGON: 
+  - 150.0
+  - 200.0
+  ENDERMAN:  
+  - 10.0
+  - 20.0
+  ENDERMITE: 
+  - 5.0
+  - 10.0
+  GHAST:  
+  - 10.0
+  - 20.0
+  GUARDIAN:  
+  - 10.0
+  - 20.0
+  MAGMA_CUBE:  
+  - 10.0
+  - 20.0
+  PIG_ZOMBIE:  
+  - 10.0
+  - 20.0
+  SILVERFISH: 
+  - 10.0
+  - 20.0
+  SPIDER: 
+  - 10.0
+  - 20.0
+  WITCH:  
+  - 10.0
+  - 20.0
+  WITHER: 
+  - 150.0
+  - 200.0

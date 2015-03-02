@@ -1,6 +1,8 @@
 package io.github.ratismal.moneythief;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Random;
+
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,16 +17,14 @@ public class EntityKillerListener implements Listener {
 
 	MoneyThief plugin;
 	Economy econ;
-	private Map<String, Object> mobValues;
 	EntityKillerListener (MoneyThief instance) {
 		plugin = instance;
 		econ = instance.econ;
-		mobValues = instance.mobValues;
 	}
 	FileConfiguration config = MoneyThief.plugin.getConfig();
 	@EventHandler
 	public void onDeath(EntityDeathEvent event) {
-		if (event.getEntity().getKiller() instanceof Player) {
+		if ((event.getEntity().getKiller() instanceof Player) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
 			if (!(event.getEntity() instanceof Player)) {
 				EntityType killed = event.getEntityType();
 				String entity = "" + killed;
@@ -42,25 +42,31 @@ public class EntityKillerListener implements Listener {
 						else {
 							entity = "a " + entity;
 						}
-						money = Math.round(money * 100) / 100;
+						money = Math.round(money * 100);
+						money = money / 100;
 						String tokiller = config.getString("mk.killer");
 						entity = entity.replaceAll("_", " ");
 						tokiller = tokiller.replaceAll("%MONEYGAINED", Double.toString(money));
 						tokiller = tokiller.replaceAll("%MOBNAME", entity);
 
 						tokiller = ChatColor.translateAlternateColorCodes('&', tokiller);
-						
+
 						killer.sendMessage(tokiller);
 					}
 				}
-				
+
 			}
 		}
 	}
-	
+
 	public String searchConfig(String mob) {
-		String worth = "" + mobValues.get(mob);
+		
+		List<Double> mobWorth = plugin.getConfig().getDoubleList("mobs." + mob);
+		Double low = mobWorth.get(0);
+		Double high = mobWorth.get(1);
+		Random r = new Random();
+		String worth = "" + (low + (high - low) * r.nextDouble());
 		return worth;
 	}
-	
+
 }
