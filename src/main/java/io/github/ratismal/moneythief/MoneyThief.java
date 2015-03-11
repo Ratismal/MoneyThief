@@ -31,8 +31,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import io.github.ratismal.moneythief.PlayerKillerListener;
-
 public class MoneyThief extends JavaPlugin {
 
 
@@ -125,6 +123,7 @@ public class MoneyThief extends JavaPlugin {
 								} else if (currentVersion > newVersion) {
 									log.info("You are running an unsupported build!");
 									log.info("The recommended version is " + newVersionTitle + ", and you are running " + currentVersionTitle);
+									log.info("If the plugin has just recently updated, please ignore this message.");
 								} else {
 									log.info("Hooray! You are running the latest build!");
 								}
@@ -178,6 +177,7 @@ public class MoneyThief extends JavaPlugin {
 		}
 		if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("v"))) {
 			sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.DARK_PURPLE + " is running on version " + getDescription().getVersion());
+			return true;
 		}
 
 		if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("reloadconfig")) 

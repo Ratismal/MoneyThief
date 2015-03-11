@@ -2,6 +2,14 @@ package io.github.ratismal.moneythief;
 
 //import java.util.logging.Logger;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.ChatColor;
@@ -111,6 +119,34 @@ public class PlayerKillerListener implements Listener {
 
 				econ.depositPlayer(killer, moneyGiven);
 				econ.withdrawPlayer(killed, taken);
+
+				if (config.getBoolean("enable-logging", true)) {
+					try {
+
+						Calendar cal = Calendar.getInstance();
+						cal.getTime();
+						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+						String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + killer.getName();
+
+						File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+
+						// if file doesn't exists, then create it
+						if (!file.exists()) {
+							file.createNewFile();
+						}
+
+						FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+						BufferedWriter bw = new BufferedWriter(fw);
+						PrintWriter out = new PrintWriter(bw);
+						out.println(content);
+						bw.close();
+
+						System.out.println("Done");
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 
 				music.songTwo(killer);
 				music.songThree(killed);
