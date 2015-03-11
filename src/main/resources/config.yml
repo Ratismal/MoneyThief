@@ -11,6 +11,9 @@ gained: 10
 #The percentage of the previous percentage that is lost into nothingness (does NOT go to killer)
 lost: 10
 
+#Set this to false to stop update checks
+update-check: true
+
 #Messages that go to killer and victim upon player kill event
 pk: #Set any of the messages to "none" to disable them.
     #After %VICTIM or %KILLER, you need to put back the colour code.

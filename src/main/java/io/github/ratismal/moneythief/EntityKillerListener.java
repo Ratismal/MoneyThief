@@ -20,15 +20,22 @@ public class EntityKillerListener implements Listener {
 	EntityKillerListener (MoneyThief instance) {
 		plugin = instance;
 		econ = instance.econ;
+		//music = instance2;
 	}
-	FileConfiguration config = MoneyThief.plugin.getConfig();
+	FanfarePlayer music;
+
+	
+	FileConfiguration config;
 	@EventHandler
 	public void onDeath(EntityDeathEvent event) {
 		if ((event.getEntity().getKiller() instanceof Player) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
 			if (!(event.getEntity() instanceof Player)) {
+				music = new FanfarePlayer(MoneyThief.plugin);
+				config = MoneyThief.plugin.getConfig();
 				EntityType killed = event.getEntityType();
 				String entity = "" + killed;
-				Player killer = event.getEntity().getKiller();
+				final Player killer = event.getEntity().getKiller();
+
 				String worth = searchConfig(entity);
 				if (worth != null) {
 					double money = Double.parseDouble(worth);
@@ -52,6 +59,10 @@ public class EntityKillerListener implements Listener {
 						tokiller = ChatColor.translateAlternateColorCodes('&', tokiller);
 
 						killer.sendMessage(tokiller);
+
+						music.songOne(killer);
+
+
 					}
 				}
 
@@ -60,7 +71,7 @@ public class EntityKillerListener implements Listener {
 	}
 
 	public String searchConfig(String mob) {
-		
+
 		List<Double> mobWorth = plugin.getConfig().getDoubleList("mobs." + mob);
 		Double low = mobWorth.get(0);
 		Double high = mobWorth.get(1);

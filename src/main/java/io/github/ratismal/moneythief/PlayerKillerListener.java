@@ -14,15 +14,18 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerKillerListener implements Listener {
 
 	//private Logger log = Logger.getLogger("Minecraft");
-	private Economy econ;
-	FileConfiguration config = MoneyThief.plugin.getConfig();
+	Economy econ;
+	MoneyThief plugin;
+	FanfarePlayer music;
+	FileConfiguration config;
 	public PlayerKillerListener (MoneyThief instance) {
+		plugin = instance;
 		econ = instance.econ;
 	}
 
 	Player killer = null;
 	Player killed = null;
-	
+
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
@@ -30,6 +33,9 @@ public class PlayerKillerListener implements Listener {
 			if ((event.getEntity().hasPermission("moneythief.bypassPVP"))) {
 				return;
 			}
+			music = new FanfarePlayer(MoneyThief.plugin);
+			config = MoneyThief.plugin.getConfig();
+
 			double gained = config.getDouble("gained");
 			double lost = config.getDouble("lost");
 			String toKiller = config.getString("pk.killerone");
@@ -37,9 +43,11 @@ public class PlayerKillerListener implements Listener {
 			String toVictimTwo = config.getString("pk.victimtwo");
 			String toKillerZero = config.getString("pk.killerzero");
 			String toVictimZero = config.getString("pk.victimzero");
-			
+
 			Player killed = event.getEntity();
 			Player killer = event.getEntity().getKiller();
+
+
 
 			double balKilled = econ.getBalance(killed);
 			double balKiller = econ.getBalance(killer);
@@ -59,8 +67,8 @@ public class PlayerKillerListener implements Listener {
 				Bukkit.broadcastMessage("" + moneyGiven);
 				Bukkit.broadcastMessage("" + taken);
 				Bukkit.broadcastMessage("" + moneyLost);
-				*/
-				
+				 */
+
 				moneyGiven = Math.round(moneyGiven * 100);
 				taken = Math.round(taken * 100);
 				moneyLost = Math.round(moneyLost * 100);
@@ -72,8 +80,8 @@ public class PlayerKillerListener implements Listener {
 				Bukkit.broadcastMessage("" + moneyGiven);
 				Bukkit.broadcastMessage("" + taken);
 				Bukkit.broadcastMessage("" + moneyLost);
-				*/
-				
+				 */
+
 				String killedName = killed.getDisplayName();
 				String killerName = killer.getDisplayName();
 
@@ -103,6 +111,10 @@ public class PlayerKillerListener implements Listener {
 
 				econ.depositPlayer(killer, moneyGiven);
 				econ.withdrawPlayer(killed, taken);
+
+				music.songTwo(killer);
+				music.songThree(killed);
+
 			}
 			else {
 
@@ -122,5 +134,6 @@ public class PlayerKillerListener implements Listener {
 			}
 		}
 	}
+
 
 }
