@@ -90,7 +90,7 @@ public class EntityKillerListener implements Listener {
 								out.println(content);
 								bw.close();
 
-								System.out.println("Done");
+								//System.out.println("Done");
 
 							} catch (IOException e) {
 								e.printStackTrace();

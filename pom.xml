@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.ratismal</groupId>
   <artifactId>MoneyThief</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.3</version>
   <build>
       <plugins>
           <plugin>
@@ -29,7 +29,7 @@
        <dependency>
            <groupId>org.bukkit</groupId>
            <artifactId>bukkit</artifactId>
-           <version>1.8-R0.1-SNAPSHOT</version>
+           <version>1.8.3-R0.1-SNAPSHOT</version>
            <type>jar</type>
            <scope>provided</scope>
        </dependency>
