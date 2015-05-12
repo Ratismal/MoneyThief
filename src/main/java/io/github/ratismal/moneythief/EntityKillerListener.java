@@ -56,12 +56,17 @@ public class EntityKillerListener implements Listener {
 						else {
 							entity = "a " + entity;
 						}
+						entity = entity.toLowerCase();
 						money = Math.round(money * 100);
 						money = money / 100;
+						int major = (int) money;
+						int minor = (int) ((money - major) * 100);
 						String tokiller = config.getString("mk.killer");
 						entity = entity.replaceAll("_", " ");
 						tokiller = tokiller.replaceAll("%MONEYGAINED", Double.toString(money));
 						tokiller = tokiller.replaceAll("%MOBNAME", entity);
+						tokiller = tokiller.replaceAll("%MAJOR", Integer.toString(major));
+						tokiller = tokiller.replaceAll("%MINOR", Integer.toString(minor));
 
 						tokiller = ChatColor.translateAlternateColorCodes('&', tokiller);
 
@@ -102,6 +107,7 @@ public class EntityKillerListener implements Listener {
 
 			}
 		}
+		
 	}
 
 	public String searchConfig(String mob) {
@@ -110,7 +116,7 @@ public class EntityKillerListener implements Listener {
 		Double low = mobWorth.get(0);
 		Double high = mobWorth.get(1);
 		Random r = new Random();
-		String worth = "" + (low + (high - low) * r.nextDouble());
+		String worth = Double.toString((low + (high - low) * r.nextDouble()));
 		return worth;
 	}
 

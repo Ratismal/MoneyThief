@@ -88,7 +88,8 @@ public class MoneyThief extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Player Listener Enabled");
 		pm.registerEvents(new EntityKillerListener(this), this);
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Entity Listener Enabled");
-
+		
+		
 		//reloadCustomConfig();
 
 		currentVersionTitle = getDescription().getVersion().split("-")[0];

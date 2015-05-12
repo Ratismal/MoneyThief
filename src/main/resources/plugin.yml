@@ -1,6 +1,6 @@
 name: MoneyThief
 main: io.github.ratismal.moneythief.MoneyThief
-version: 1.2.3
+version: 1.2.4
 depend: [Vault]
 commands:
   moneythief:

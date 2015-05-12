@@ -10,6 +10,8 @@
 gained: 10
 #The percentage of the previous percentage that is lost into nothingness (does NOT go to killer)
 lost: 10
+#The percentage of money that is lost if a player dies due to a mob
+lostpve: 5
 
 #Set this to false to stop update checks
 update-check: true
@@ -17,22 +19,43 @@ update-check: true
 #Whether or not to log kills
 enable-logging: true
 
+#== How Majors and Minors work ==
+#The major is the whole integer, unrounded. The minor is the decimal of a value multiplied by 100.
+#You can use them to represent for example gold and silver coins.
+#ex) If a player gains $12.34, the major would be 12 and the minor would be 53. Thus:
+#    "Player gained 12 gold coins and 34 silver coins."
+#See the following comments to see what codes you can use for majors and minors.
+
 #Messages that go to killer and victim upon player kill event
 pk: #Set any of the messages to "none" to disable them.
     #After %VICTIM or %KILLER, you need to put back the colour code.
     #This is due to how minecraft puts a reset code at the end of usernames.
+    # %MAJOR   %MINOR   %VICTIM    %MONEYGAINED
   killerone: "&6You killed %VICTIM&6, and looted $%MONEYGAINED off of the body."
   victimone: "&6You were killed by %KILLER&6."
+    # %MAJORTAKEN   %MAJORLOST   %MINORTAKEN   %MINORLOST   %MONEYTAKEN   %MONEYLOST
   victimtwo: "&6You lost $%MONEYTAKEN, and $%MONEYLOST disappeared into the aether."
   #Messages that are sent when the victim has no money
+    # %VICTIM
   killerzero: "&6You killed %VICTIM&6, but they had no money to loot."
+    # %KILLER
   victimzero: "&6You were killed by %KILLER&6, but you had nothing to lose!"
 
 #Messages that go to the killer upon mob kill event
 mk: #Set to "none" to disable
+    # %MAJOR    %MINOR   %MONEYGAINED   %MOBNAME
   killer: "&6You gained $%MONEYGAINED for killing %MOBNAME."
              #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
-             
+
+#Messages that go to player upon death from a mob    
+md: #Set to "none" to disable
+    # %MAJOR   %MINOR   %MOBNAME   %MONEYLOST
+  victim: "&6You were killed by %MOBNAME, and $%MONEYLOST disappeared into the aether."
+             #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
+  #Messages that are sent when the victim has no money
+    # %MOBNAME
+  victimzero: "&6You were killed by %MOBNAME, but you had nothing to lose!"
+ 
 #Message that is sent if a player runs a command they don't have perms for
 noperms: "&4Bugger off, you don't have the right permissions!"
 
