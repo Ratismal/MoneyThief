@@ -94,6 +94,8 @@ public class EntityKillerListener implements Listener {
 
 							music.songOne(killer);
 
+
+
 							if (config.getBoolean("enable-logging", true)) {
 								try {
 

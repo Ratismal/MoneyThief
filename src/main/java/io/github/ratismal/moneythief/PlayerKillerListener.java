@@ -12,6 +12,7 @@ import java.util.Calendar;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -30,7 +31,8 @@ public class PlayerKillerListener implements Listener {
 	MoneyThief plugin;
 	FanfarePlayer music;
 	FileConfiguration config;
-	public PlayerKillerListener (MoneyThief instance) {
+
+	public PlayerKillerListener(MoneyThief instance) {
 		plugin = instance;
 		econ = instance.econ;
 	}
@@ -41,13 +43,14 @@ public class PlayerKillerListener implements Listener {
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
+		//event.setDeathMessage("lol cats are cute");
 		music = new FanfarePlayer(MoneyThief.plugin);
 		config = MoneyThief.plugin.getConfig();
-		if ((event.getEntity().getKiller() instanceof Player) && (event.getEntity().getKiller().hasPermission("moneythief.PVP"))) {
+		Player killerEntity = event.getEntity().getKiller();
+		if ((Bukkit.getOnlinePlayers().contains(killerEntity)) && (killerEntity.hasPermission("moneythief.PVP"))) {
 			if ((event.getEntity().hasPermission("moneythief.bypassPVP"))) {
 				return;
 			}
-			
 
 			double gained = config.getDouble("gained");
 			double lost = config.getDouble("lost");
@@ -59,7 +62,6 @@ public class PlayerKillerListener implements Listener {
 
 			Player killed = event.getEntity();
 			Player killer = event.getEntity().getKiller();
-
 
 
 			double balKilled = econ.getBalance(killed);
@@ -111,6 +113,14 @@ public class PlayerKillerListener implements Listener {
 				int majorLost = (int) moneyLost;
 				int minorLost = (int) ((moneyLost - majorLost) * 100);
 
+				toKiller = processMessage(toKiller, killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+						minorGiven, majorTaken, minorTaken, majorLost, minorLost);
+				toVictimTwo = processMessage(toVictimTwo, killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+						minorGiven, majorTaken, minorTaken, majorLost, minorLost);
+				toVictimOne = processMessage(toVictimOne, killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+						minorGiven, majorTaken, minorTaken, majorLost, minorLost);
+
+				/*
 				toKiller = toKiller.replaceAll("%VICTIM", killedName);
 				toKiller = toKiller.replaceAll("%MONEYGAINED", Double.toString(moneyGiven));
 				toVictimTwo = toVictimTwo.replaceAll("%MONEYTAKEN", Double.toString(taken));
@@ -125,6 +135,7 @@ public class PlayerKillerListener implements Listener {
 				toKiller = ChatColor.translateAlternateColorCodes('&', toKiller);
 				toVictimOne = ChatColor.translateAlternateColorCodes('&', toVictimOne);
 				toVictimTwo = ChatColor.translateAlternateColorCodes('&', toVictimTwo);
+				*/
 				if (!(toVictimOne.equalsIgnoreCase("none"))) {
 					killed.sendMessage(toVictimOne); //Message sent to victim upon
 				}
@@ -134,7 +145,17 @@ public class PlayerKillerListener implements Listener {
 				if (!(toKiller.equalsIgnoreCase("none"))) {
 					killer.sendMessage(toKiller);//message sent to killer
 				}
-
+				String pvpMessage = config.getString("pvpmessage");
+				pvpMessage = pvpMessage.replaceAll("%KILLER", killerName);
+				pvpMessage = pvpMessage.replaceAll("%VICTIM", killedName);
+				pvpMessage = ChatColor.translateAlternateColorCodes('&', pvpMessage);
+				if (!(pvpMessage.equalsIgnoreCase("none"))) {
+					if (pvpMessage.equalsIgnoreCase("disable")) {
+						event.setDeathMessage(null);
+					} else {
+						event.setDeathMessage(pvpMessage);
+					}
+				}
 				econ.depositPlayer(killer, moneyGiven);
 				econ.withdrawPlayer(killed, taken);
 
@@ -169,8 +190,7 @@ public class PlayerKillerListener implements Listener {
 				music.songTwo(killer);
 				music.songThree(killed);
 
-			}
-			else {
+			} else {
 
 				String killedName = killed.getDisplayName();
 				String killerName = killer.getDisplayName();
@@ -214,26 +234,24 @@ public class PlayerKillerListener implements Listener {
 					}
 				}
 			}
-		}
-		else if (!(event.getEntity().getKiller() instanceof Player)) {
+		} else/* if (!(event.getEntity().getKiller() instanceof Player)) */ {
 			if ((event.getEntity().hasPermission("moneythief.bypassPVE"))) {
 				return;
 			}
-			//System.out.println("Player killed by an entity! UH OH!");
+			System.out.println("Player killed by an entity! UH OH!");
 			Entity killer = getCausedEntity(event);
 			if (killer == null) return;
-			
+
 			EntityType killerType = killer.getType();
-			
+
 			Player killed = event.getEntity();
 			String entity = "" + killerType;
 			double lost = config.getDouble("lostpve");
-			String firstLetter = entity.substring(0,1).toLowerCase();
-			if ((firstLetter).equals("a") || (firstLetter).equals("e") || 
+			String firstLetter = entity.substring(0, 1).toLowerCase();
+			if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
 					(firstLetter).equals("i") || (firstLetter).equals("o")) {
 				entity = "an " + entity;
-			}
-			else {
+			} else {
 				entity = "a " + entity;
 			}
 			entity = entity.toLowerCase();
@@ -241,10 +259,9 @@ public class PlayerKillerListener implements Listener {
 			//String killedName = killed.getDisplayName();
 			//String killerName = killer.getDisplayName();
 
-			
-			
-			if (econ.getBalance(killed) > 0){
-				
+
+			if (econ.getBalance(killed) > 0) {
+
 				double balKilled = econ.getBalance(killed);
 				double moneyLost = balKilled * (lost / 100);
 				moneyLost = Math.round(moneyLost * 100);
@@ -252,7 +269,7 @@ public class PlayerKillerListener implements Listener {
 				int major = (int) moneyLost;
 				int minor = (int) ((moneyLost - major) * 100);
 				//System.out.println(major + " " + minor);
-				
+
 				String toVictim = config.getString("md.victim");
 
 				toVictim = toVictim.replaceAll("%MOBNAME", entity);
@@ -264,8 +281,19 @@ public class PlayerKillerListener implements Listener {
 				if (!(toVictim.equalsIgnoreCase("none"))) {
 					killed.sendMessage(toVictim); //Message sent to victim upon
 				}
+				String pveMessage = config.getString("pvemessage");
+				pveMessage = pveMessage.replaceAll("%MOBNAME", entity);
+				pveMessage = pveMessage.replaceAll("%VICTIM", killed.getDisplayName());
+				pveMessage = ChatColor.translateAlternateColorCodes('&', pveMessage);
+				if (!(pveMessage.equalsIgnoreCase("none"))) {
+					if (pveMessage.equalsIgnoreCase("disable")) {
+						event.setDeathMessage(null);
+					} else {
+						event.setDeathMessage(pveMessage);
+					}
+				}
 				//System.out.println("Withdrawing " + moneyLost);
-				econ.withdrawPlayer(killed, moneyLost);	
+				econ.withdrawPlayer(killed, moneyLost);
 				//econ.
 				if (config.getBoolean("enable-logging", true)) {
 					try {
@@ -295,8 +323,7 @@ public class PlayerKillerListener implements Listener {
 					}
 				}
 				music.songThree(killed);
-			}
-			else {
+			} else {
 
 				//String killedName = killed.getDisplayName();
 				String toVictimZero = config.getString("md.victimzero");
@@ -304,12 +331,11 @@ public class PlayerKillerListener implements Listener {
 				//killed = event.getEntity();
 				//entity = "" + killer;
 
-				firstLetter = entity.substring(0,1).toLowerCase();
-				if ((firstLetter).equals("a") || (firstLetter).equals("e") || 
+				firstLetter = entity.substring(0, 1).toLowerCase();
+				if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
 						(firstLetter).equals("i") || (firstLetter).equals("o")) {
 					entity = "an " + entity;
-				}
-				else {
+				} else {
 					entity = "a " + entity;
 				}
 
@@ -348,14 +374,39 @@ public class PlayerKillerListener implements Listener {
 			}
 		}
 	}
+
 	public static Entity getCausedEntity(PlayerDeathEvent event) {
-	    EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
-	    if (damageEvent != null && !damageEvent.isCancelled() && (damageEvent instanceof EntityDamageByEntityEvent)) {
-	        EntityDamageByEntityEvent entityDamageEvent = (EntityDamageByEntityEvent) damageEvent;
-	        Entity damager = entityDamageEvent.getDamager();
-	        
-	        return damager;
-	    }
-	    return null;
+		EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+		if (damageEvent != null && !damageEvent.isCancelled() && (damageEvent instanceof EntityDamageByEntityEvent)) {
+			EntityDamageByEntityEvent entityDamageEvent = (EntityDamageByEntityEvent) damageEvent;
+			Entity damager = entityDamageEvent.getDamager();
+
+			return damager;
+		}
+		return null;
 	}
+
+	public String processMessage(String message, String killedName, double moneyGiven, double taken, double moneyLost,
+								 String killerName, int majorGiven, int minorGiven, int majorTaken, int minorTaken,
+								 int majorLost, int minorLost) {
+
+		message = message.replaceAll("%VICTIM", killedName);
+		message = message.replaceAll("%MONEYGAINED", Double.toString(moneyGiven));
+		message = message.replaceAll("%MONEYTAKEN", Double.toString(taken));
+		message = message.replaceAll("%MONEYLOST", Double.toString(moneyLost));
+		message = message.replaceAll("%KILLER", killerName);
+		message = message.replaceAll("%MAJOR", Integer.toString(majorGiven));
+		message = message.replaceAll("%MINOR", Integer.toString(minorGiven));
+		message = message.replaceAll("%MAJORTAKEN", Integer.toString(majorTaken));
+		message = message.replaceAll("%MINORTAKEN", Integer.toString(minorTaken));
+		message = message.replaceAll("%MAJORLOST", Integer.toString(majorLost));
+		message = message.replaceAll("%MINORLOST", Integer.toString(minorLost));
+
+		message = ChatColor.translateAlternateColorCodes('&', message);
+
+
+		return message;
+
+	}
+
 }

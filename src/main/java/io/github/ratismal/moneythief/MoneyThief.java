@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.mcstats.Metrics;
 
 public class MoneyThief extends JavaPlugin {
 
@@ -94,7 +95,18 @@ public class MoneyThief extends JavaPlugin {
 
 		currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.valueOf(currentVersionTitle.replaceFirst("\\.", ""));
-        
+
+		if (getConfig().getBoolean("metrics")) {
+			try {
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics started");
+			} catch (IOException e) {
+				// Failed to submit the stats :-(
+				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics failed to start");
+			}
+		}
+
 		//perform update check
 		this.getServer().getScheduler().runTask(this, new Runnable() {
 

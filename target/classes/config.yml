@@ -3,6 +3,13 @@
 #==================
 
 #==================
+#     Metrics
+#==================
+
+#Allows the plugin to send anonymous usage statistics to Metrics
+metrics: true
+
+#==================
 #       PVP
 #==================
 
@@ -61,6 +68,15 @@ md: #Set to "none" to disable
  
 #Message that is sent if a player runs a command they don't have perms for
 noperms: "&4Bugger off, you don't have the right permissions!"
+
+#Message that replaces default death message on a pvp death event
+#Set to "none" to not change message, set to "disable" to disable it
+#   %VICTIM    %KILLER
+pvpmessage: "none"
+#Message that replaces default death message when killed by a mob
+#Set to "none" to not change message, set to "disable" to disable it
+#   %VICTIM    %MOBNAME
+pvemessage: "none"
 
 #==================
 #      PVE
