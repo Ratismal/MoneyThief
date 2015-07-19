@@ -1,2 +1,7 @@
-target/
+target/*
+.idea/*
+.settings/*
+.classpath
+.project
+MoneyThief.iml
 pom.xml
