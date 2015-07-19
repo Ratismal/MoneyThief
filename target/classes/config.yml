@@ -19,6 +19,9 @@ update-check: true
 #Whether or not to log kills
 enable-logging: true
 
+#Whether or not artificially spawned mobs will return rewards
+artificial-spawn: true
+
 #== How Majors and Minors work ==
 #The major is the whole integer, unrounded. The minor is the decimal of a value multiplied by 100.
 #You can use them to represent for example gold and silver coins.
@@ -113,6 +116,9 @@ mobs: #Mobs are expandable. If I've missed one, simply put it's name below
   CAVE_SPIDER: 
   - 10.0
   - 20.0
+  SLIME:
+  - 5.0
+  - 10.0
   CREEPER:  
   - 10.0
   - 20.0

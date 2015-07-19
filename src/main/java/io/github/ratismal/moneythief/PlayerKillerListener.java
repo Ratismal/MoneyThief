@@ -107,9 +107,9 @@ public class PlayerKillerListener implements Listener {
 				int majorGiven = (int) moneyGiven;
 				int minorGiven = (int) ((moneyGiven - majorGiven) * 100);
 				int majorTaken = (int) taken;
-				int minorTaken = (int) ((moneyGiven - majorTaken) * 100);
+				int minorTaken = (int) ((taken - majorTaken) * 100);
 				int majorLost = (int) moneyLost;
-				int minorLost = (int) ((moneyGiven - majorLost) * 100);
+				int minorLost = (int) ((moneyLost - majorLost) * 100);
 
 				toKiller = toKiller.replaceAll("%VICTIM", killedName);
 				toKiller = toKiller.replaceAll("%MONEYGAINED", Double.toString(moneyGiven));
@@ -216,9 +216,9 @@ public class PlayerKillerListener implements Listener {
 			}
 		}
 		else if (!(event.getEntity().getKiller() instanceof Player)) {
-			/*if ((event.getEntity().hasPermission("moneythief.bypassPVE"))) {
+			if ((event.getEntity().hasPermission("moneythief.bypassPVE"))) {
 				return;
-			}*/
+			}
 			//System.out.println("Player killed by an entity! UH OH!");
 			Entity killer = getCausedEntity(event);
 			if (killer == null) return;
