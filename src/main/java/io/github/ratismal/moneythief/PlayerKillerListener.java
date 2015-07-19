@@ -394,13 +394,14 @@ public class PlayerKillerListener implements Listener {
 		message = message.replaceAll("%MONEYGAINED", Double.toString(moneyGiven));
 		message = message.replaceAll("%MONEYTAKEN", Double.toString(taken));
 		message = message.replaceAll("%MONEYLOST", Double.toString(moneyLost));
-		message = message.replaceAll("%KILLER", killerName);
-		message = message.replaceAll("%MAJOR", Integer.toString(majorGiven));
-		message = message.replaceAll("%MINOR", Integer.toString(minorGiven));
 		message = message.replaceAll("%MAJORTAKEN", Integer.toString(majorTaken));
 		message = message.replaceAll("%MINORTAKEN", Integer.toString(minorTaken));
 		message = message.replaceAll("%MAJORLOST", Integer.toString(majorLost));
 		message = message.replaceAll("%MINORLOST", Integer.toString(minorLost));
+		message = message.replaceAll("%KILLER", killerName);
+		message = message.replaceAll("%MAJOR", Integer.toString(majorGiven));
+		message = message.replaceAll("%MINOR", Integer.toString(minorGiven));
+
 
 		message = ChatColor.translateAlternateColorCodes('&', message);
 
