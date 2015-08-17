@@ -12,5 +12,10 @@
 # License
 MoneyThief uses the MIT license. See the 'LICENSE' file for details.
 
+#Excuse the mess!
+This was coded by me a while back, when I was still relatively new. As such, the code is a bit messy and could use a good refactoring. Please bear with me!
+
+#Need anything else?
+
 See http://dev.bukkit.org/bukkit-plugins/moneythief/ for more details.
 
