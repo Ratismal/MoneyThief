@@ -1,7 +1,7 @@
 name: MoneyThief
 main: io.github.ratismal.moneythief.MoneyThief
 author: Ratismal
-version: 1.2.10
+version: 1.2.12
 depend: [Vault]
 commands:
   moneythief:

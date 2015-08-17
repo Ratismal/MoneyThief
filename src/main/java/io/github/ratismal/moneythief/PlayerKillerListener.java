@@ -43,10 +43,12 @@ public class PlayerKillerListener implements Listener {
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
-		//event.setDeathMessage("lol cats are cute");
 		music = new FanfarePlayer(MoneyThief.plugin);
 		config = MoneyThief.plugin.getConfig();
 		Player killerEntity = event.getEntity().getKiller();
+		/**
+		 * Event is PVP
+		 */
 		if ((Bukkit.getOnlinePlayers().contains(killerEntity)) && (killerEntity.hasPermission("moneythief.PVP"))) {
 			if ((event.getEntity().hasPermission("moneythief.bypassPVP"))) {
 				return;
@@ -234,142 +236,248 @@ public class PlayerKillerListener implements Listener {
 					}
 				}
 			}
+			/**
+			 * Event is PVE
+			 */
 		} else/* if (!(event.getEntity().getKiller() instanceof Player)) */ {
 			if ((event.getEntity().hasPermission("moneythief.bypassPVE"))) {
 				return;
 			}
-			System.out.println("Player killed by an entity! UH OH!");
-			Entity killer = getCausedEntity(event);
-			if (killer == null) return;
+			//System.out.println("Player killed by an entity! UH OH!");
+			if (wasKilledByMob(event)) {
+				Entity killer = getCausedEntity(event);
+				if (killer == null) return;
 
-			EntityType killerType = killer.getType();
+				EntityType killerType = killer.getType();
 
-			Player killed = event.getEntity();
-			String entity = "" + killerType;
-			double lost = config.getDouble("lostpve");
-			String firstLetter = entity.substring(0, 1).toLowerCase();
-			if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
-					(firstLetter).equals("i") || (firstLetter).equals("o")) {
-				entity = "an " + entity;
-			} else {
-				entity = "a " + entity;
-			}
-			entity = entity.toLowerCase();
-
-			//String killedName = killed.getDisplayName();
-			//String killerName = killer.getDisplayName();
-
-
-			if (econ.getBalance(killed) > 0) {
-
-				double balKilled = econ.getBalance(killed);
-				double moneyLost = balKilled * (lost / 100);
-				moneyLost = Math.round(moneyLost * 100);
-				moneyLost = moneyLost / 100;
-				int major = (int) moneyLost;
-				int minor = (int) ((moneyLost - major) * 100);
-				//System.out.println(major + " " + minor);
-
-				String toVictim = config.getString("md.victim");
-
-				toVictim = toVictim.replaceAll("%MOBNAME", entity);
-				toVictim = toVictim.replaceAll("%MONEYLOST", Double.toString(moneyLost));
-				toVictim = toVictim.replaceAll("%MAJOR", Integer.toString(major));
-				toVictim = toVictim.replaceAll("%MINOR", Integer.toString(minor));
-				toVictim = ChatColor.translateAlternateColorCodes('&', toVictim);
-
-				if (!(toVictim.equalsIgnoreCase("none"))) {
-					killed.sendMessage(toVictim); //Message sent to victim upon
-				}
-				String pveMessage = config.getString("pvemessage");
-				pveMessage = pveMessage.replaceAll("%MOBNAME", entity);
-				pveMessage = pveMessage.replaceAll("%VICTIM", killed.getDisplayName());
-				pveMessage = ChatColor.translateAlternateColorCodes('&', pveMessage);
-				if (!(pveMessage.equalsIgnoreCase("none"))) {
-					if (pveMessage.equalsIgnoreCase("disable")) {
-						event.setDeathMessage(null);
-					} else {
-						event.setDeathMessage(pveMessage);
-					}
-				}
-				//System.out.println("Withdrawing " + moneyLost);
-				econ.withdrawPlayer(killed, moneyLost);
-				//econ.
-				if (config.getBoolean("enable-logging", true)) {
-					try {
-
-						Calendar cal = Calendar.getInstance();
-						cal.getTime();
-						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-						String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + entity;
-
-						File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
-
-						// if file doesn't exists, then create it
-						if (!file.exists()) {
-							file.createNewFile();
-						}
-
-						FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-						BufferedWriter bw = new BufferedWriter(fw);
-						PrintWriter out = new PrintWriter(bw);
-						out.println(content);
-						bw.close();
-
-						//System.out.println("Done");
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				music.songThree(killed);
-			} else {
-
-				//String killedName = killed.getDisplayName();
-				String toVictimZero = config.getString("md.victimzero");
-				//killer = event.getEntity().getKiller().getType();
-				//killed = event.getEntity();
-				//entity = "" + killer;
-
-				firstLetter = entity.substring(0, 1).toLowerCase();
+				Player killed = event.getEntity();
+				String entity = "" + killerType;
+				double lost = config.getDouble("lostpve");
+				String prefix;
+				String firstLetter = entity.substring(0, 1).toLowerCase();
 				if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
 						(firstLetter).equals("i") || (firstLetter).equals("o")) {
-					entity = "an " + entity;
+					prefix = "an";
 				} else {
-					entity = "a " + entity;
+					prefix = "a";
 				}
+				entity = entity.toLowerCase();
 
-				toVictimZero = toVictimZero.replaceAll("%MOBNAME", entity);
-				toVictimZero = ChatColor.translateAlternateColorCodes('&', toVictimZero);
-				if (!(toVictimZero.equalsIgnoreCase("none"))) {
-					killed.sendMessage(toVictimZero);
-				}
-				if (config.getBoolean("enable-logging", true)) {
-					try {
+				//String killedName = killed.getDisplayName();
+				//String killerName = killer.getDisplayName();
 
-						Calendar cal = Calendar.getInstance();
-						cal.getTime();
-						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-						String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + entity;
 
-						File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+				if (econ.getBalance(killed) > 0) {
 
-						// if file doesn't exists, then create it
-						if (!file.exists()) {
-							file.createNewFile();
-						}
+					double balKilled = econ.getBalance(killed);
+					double moneyLost = balKilled * (lost / 100);
+					moneyLost = Math.round(moneyLost * 100);
+					moneyLost = moneyLost / 100;
+					int major = (int) moneyLost;
+					int minor = (int) ((moneyLost - major) * 100);
+					//System.out.println(major + " " + minor);
 
-						FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-						BufferedWriter bw = new BufferedWriter(fw);
-						PrintWriter out = new PrintWriter(bw);
-						out.println(content);
-						bw.close();
+					String toVictim = config.getString("md.victim");
 
-						//System.out.println("Done");
+					toVictim = toVictim.replaceAll("%MOBNAME", entity);
+					toVictim = toVictim.replaceAll("%MONEYLOST", Double.toString(moneyLost));
+					toVictim = toVictim.replaceAll("%MAJOR", Integer.toString(major));
+					toVictim = toVictim.replaceAll("%MINOR", Integer.toString(minor));
+					toVictim = toVictim.replaceAll("%A", prefix);
+					toVictim = ChatColor.translateAlternateColorCodes('&', toVictim);
 
-					} catch (IOException e) {
-						e.printStackTrace();
+					if (!(toVictim.equalsIgnoreCase("none"))) {
+						killed.sendMessage(toVictim); //Message sent to victim upon
 					}
+					String pveMessage = config.getString("pvemessage");
+					pveMessage = pveMessage.replaceAll("%MOBNAME", entity);
+					pveMessage = pveMessage.replaceAll("%VICTIM", killed.getDisplayName());
+					pveMessage = ChatColor.translateAlternateColorCodes('&', pveMessage);
+					if (!(pveMessage.equalsIgnoreCase("none"))) {
+						if (pveMessage.equalsIgnoreCase("disable")) {
+							event.setDeathMessage(null);
+						} else {
+							event.setDeathMessage(pveMessage);
+						}
+					}
+					//System.out.println("Withdrawing " + moneyLost);
+					econ.withdrawPlayer(killed, moneyLost);
+					//econ.
+					if (config.getBoolean("enable-logging", true)) {
+						try {
+
+							Calendar cal = Calendar.getInstance();
+							cal.getTime();
+							SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+							String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + entity;
+
+							File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+
+							// if file doesn't exists, then create it
+							if (!file.exists()) {
+								file.createNewFile();
+							}
+
+							FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+							BufferedWriter bw = new BufferedWriter(fw);
+							PrintWriter out = new PrintWriter(bw);
+							out.println(content);
+							bw.close();
+
+							//System.out.println("Done");
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					music.songThree(killed);
+				} else {
+
+					//String killedName = killed.getDisplayName();
+					String toVictimZero = config.getString("md.victimzero");
+					//killer = event.getEntity().getKiller().getType();
+					//killed = event.getEntity();
+					//entity = "" + killer;
+					firstLetter = entity.substring(0, 1).toLowerCase();
+					if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
+							(firstLetter).equals("i") || (firstLetter).equals("o")) {
+						prefix = "an";
+					} else {
+						prefix = "a";
+					}
+
+					toVictimZero = toVictimZero.replaceAll("%MOBNAME", entity);
+					toVictimZero = toVictimZero.replaceAll("%A", prefix);
+					toVictimZero = ChatColor.translateAlternateColorCodes('&', toVictimZero);
+					if (!(toVictimZero.equalsIgnoreCase("none"))) {
+						killed.sendMessage(toVictimZero);
+					}
+					if (config.getBoolean("enable-logging", true)) {
+						try {
+
+							Calendar cal = Calendar.getInstance();
+							cal.getTime();
+							SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+							String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + entity;
+
+							File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+
+							// if file doesn't exists, then create it
+							if (!file.exists()) {
+								file.createNewFile();
+							}
+
+							FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+							BufferedWriter bw = new BufferedWriter(fw);
+							PrintWriter out = new PrintWriter(bw);
+							out.println(content);
+							bw.close();
+
+							//System.out.println("Done");
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			} else {
+				double lost = config.getDouble("lostpve");
+				EntityDamageEvent.DamageCause damageCause = getCause(event);
+				String cause = damageCause.name();
+				cause = cause.toLowerCase();
+				cause = cause.replaceAll("_", " ");
+				Player killed = event.getEntity();
+
+				if (econ.getBalance(killed) > 0) {
+
+					double balKilled = econ.getBalance(killed);
+					double moneyLost = balKilled * (lost / 100);
+					moneyLost = Math.round(moneyLost * 100);
+					moneyLost = moneyLost / 100;
+					int major = (int) moneyLost;
+					int minor = (int) ((moneyLost - major) * 100);
+					//System.out.println(major + " " + minor);
+
+					String toVictim = config.getString("ed.victim");
+
+					toVictim = toVictim.replaceAll("%CAUSE", cause);
+					toVictim = toVictim.replaceAll("%MONEYLOST", Double.toString(moneyLost));
+					toVictim = toVictim.replaceAll("%MAJOR", Integer.toString(major));
+					toVictim = toVictim.replaceAll("%MINOR", Integer.toString(minor));
+					toVictim = ChatColor.translateAlternateColorCodes('&', toVictim);
+					//System.out.println("Withdrawing " + moneyLost);
+					econ.withdrawPlayer(killed, moneyLost);
+					//econ.
+					if (!(toVictim.equalsIgnoreCase("none"))) {
+						killed.sendMessage(toVictim); //Message sent to victim upon
+					}
+					if (config.getBoolean("enable-logging", true)) {
+						try {
+
+							Calendar cal = Calendar.getInstance();
+							cal.getTime();
+							SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+							String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + cause;
+
+							File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+
+							// if file doesn't exists, then create it
+							if (!file.exists()) {
+								file.createNewFile();
+							}
+
+							FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+							BufferedWriter bw = new BufferedWriter(fw);
+							PrintWriter out = new PrintWriter(bw);
+							out.println(content);
+							bw.close();
+
+							//System.out.println("Done");
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					music.songThree(killed);
+
+				} else {
+					String toVictim = config.getString("ed.victimzero");
+
+					toVictim = toVictim.replaceAll("%CAUSE", cause);
+					toVictim = ChatColor.translateAlternateColorCodes('&', toVictim);
+
+					if (!(toVictim.equalsIgnoreCase("none"))) {
+						killed.sendMessage(toVictim); //Message sent to victim upon
+					}
+
+					if (config.getBoolean("enable-logging", true)) {
+						try {
+
+							Calendar cal = Calendar.getInstance();
+							cal.getTime();
+							SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+							String content = "[" + sdf.format(cal.getTime()) + "] " + killed.getName() + " was killed by " + cause;
+
+							File file = new File(MoneyThief.plugin.getDataFolder(), "PlayerKills.log");
+
+							// if file doesn't exists, then create it
+							if (!file.exists()) {
+								file.createNewFile();
+							}
+
+							FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+							BufferedWriter bw = new BufferedWriter(fw);
+							PrintWriter out = new PrintWriter(bw);
+							out.println(content);
+							bw.close();
+
+							//System.out.println("Done");
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					music.songThree(killed);
 				}
 			}
 		}
@@ -382,6 +490,26 @@ public class PlayerKillerListener implements Listener {
 			Entity damager = entityDamageEvent.getDamager();
 
 			return damager;
+		}
+		return null;
+	}
+
+	public static boolean wasKilledByMob(PlayerDeathEvent event) {
+		EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+		if (damageEvent != null && !damageEvent.isCancelled() && (damageEvent instanceof EntityDamageByEntityEvent)) {
+			EntityDamageByEntityEvent entityDamageEvent = (EntityDamageByEntityEvent) damageEvent;
+			Entity damager = entityDamageEvent.getDamager();
+			return true;
+		}
+		return false;
+	}
+
+	public static EntityDamageEvent.DamageCause getCause(PlayerDeathEvent event) {
+		EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
+		if (damageEvent != null && !damageEvent.isCancelled()) {
+			EntityDamageEvent.DamageCause cause = damageEvent.getCause();
+
+			return cause;
 		}
 		return null;
 	}

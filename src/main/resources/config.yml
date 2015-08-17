@@ -17,7 +17,7 @@ metrics: true
 gained: 10
 #The percentage of the previous percentage that is lost into nothingness (does NOT go to killer)
 lost: 10
-#The percentage of money that is lost if a player dies due to a mob
+#The percentage of money that is lost if a player dies due to a mob or the environment (PVE)
 lostpve: 5
 
 #Set this to false to stop update checks
@@ -54,18 +54,24 @@ pk: #Set any of the messages to "none" to disable them.
 #Messages that go to the killer upon mob kill event
 mk: #Set to "none" to disable
     # %MAJOR    %MINOR   %MONEYGAINED   %MOBNAME
-  killer: "&6You gained $%MONEYGAINED for killing %MOBNAME."
-             #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
+  killer: "&6You gained $%MONEYGAINED for killing %A %MOBNAME."
+             #Based on the mob name, '%A' will be replaced with 'a' or 'an'.
 
 #Messages that go to player upon death from a mob    
 md: #Set to "none" to disable
-    # %MAJOR   %MINOR   %MOBNAME   %MONEYLOST
-  victim: "&6You were killed by %MOBNAME, and $%MONEYLOST disappeared into the aether."
-             #Based on the mob name, 'a' or 'an' will be included in %MOBNAME.
+    # %MAJOR   %MINOR   %MOBNAME   %MONEYLOST   %A
+  victim: "&6You were killed by %A %MOBNAME, and $%MONEYLOST disappeared into the aether."
+             #Based on the mob name, '%A' will be replaced with 'a' or 'an'.
   #Messages that are sent when the victim has no money
-    # %MOBNAME
-  victimzero: "&6You were killed by %MOBNAME, but you had nothing to lose!"
- 
+    # %MOBNAME   %A
+  victimzero: "&6You were killed by %A %MOBNAME, but you had nothing to lose!"
+
+#Messages that go to player upon death from environment (not mob or player)
+ed:     # %CAUSE   %MONEYLOST   %MAJOR   %MINOR
+  victim: "&6You died from %CAUSE, and $%MONEYLOST disappeared into the aether."
+        # %CAUSE
+  victimzero: "&6You died from %CAUSE, but had nothing to lose!"
+
 #Message that is sent if a player runs a command they don't have perms for
 noperms: "&4Bugger off, you don't have the right permissions!"
 

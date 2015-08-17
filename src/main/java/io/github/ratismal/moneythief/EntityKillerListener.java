@@ -13,6 +13,7 @@ import java.util.Random;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -56,7 +57,7 @@ public class EntityKillerListener implements Listener {
 		//spawnedNotNatural.containsKey()
 		if (config.getBoolean("artificial-spawn", true) || !spawnedNotNatural.containsKey(event.getEntity().getEntityId())) {
 			//config.getBoolean("artificial-spawn", true) ||
-			if ((event.getEntity().getKiller() instanceof Player) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
+			if ((Bukkit.getOnlinePlayers().contains(event.getEntity().getKiller())) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
 				if (!(event.getEntity() instanceof Player)) {
 					music = new FanfarePlayer(MoneyThief.plugin);
 
@@ -68,14 +69,17 @@ public class EntityKillerListener implements Listener {
 					if (!worth.equals("null")) {
 						double money = Double.parseDouble(worth);
 						econ.depositPlayer(killer, money);
+
 						if (!(config.getString("mk.killer")).equals("none")) {
+							String prefix;
 							String firstLetter = entity.substring(0, 1).toLowerCase();
 							if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
 									(firstLetter).equals("i") || (firstLetter).equals("o")) {
-								entity = "an " + entity;
+								prefix = "an";
 							} else {
-								entity = "a " + entity;
+								prefix = "a";
 							}
+
 							entity = entity.toLowerCase();
 							money = Math.round(money * 100);
 							money = money / 100;
@@ -87,6 +91,7 @@ public class EntityKillerListener implements Listener {
 							tokiller = tokiller.replaceAll("%MOBNAME", entity);
 							tokiller = tokiller.replaceAll("%MAJOR", Integer.toString(major));
 							tokiller = tokiller.replaceAll("%MINOR", Integer.toString(minor));
+							tokiller = tokiller.replaceAll("%A", prefix);
 
 							tokiller = ChatColor.translateAlternateColorCodes('&', tokiller);
 
