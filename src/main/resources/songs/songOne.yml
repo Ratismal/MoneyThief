@@ -1,0 +1,63 @@
+#-=-=-==--==-=-=-=-#
+#  MUSIC CONFIG 1  #
+#-=-=-==--==-=-=-=-#
+
+#In this config, you can set what song plays to KILLER when:
+#  KILLER kills MOB
+#
+#An example of a note to be played is:
+#0:
+#  tone: A
+#  type: 1
+#  octave: 0
+#  instrum: PIANO
+#  time: 0
+#
+#This will play the note 'A sharp' in the first octave using
+#  the piano instrument, after 0 ticks
+#
+#A breakdown of the syntax:
+#0: Can be any integer, is the id of the note. You CANNOT skip any integers.
+#  tone: The name of the note to play
+#  type: Modifies the note. (0 is natural | 1 is shard | 2 is flat)
+#  octave: Octave of the note. Can be 0 or 1.
+#  instrum: The instrument.
+#  time: Delay before the note plays, in ticks.
+#
+#Instrument list:
+#  BASS_DRUM
+#  BASS_GUITAR
+#  PIANO
+#  SNARE_DRUM
+#  STICKS
+
+0:
+  tone: E
+  type: 0
+  octave: 0
+  instrum: PIANO
+  time: 0
+1:
+  tone: E
+  type: 0
+  octave: 0
+  instrum: PIANO
+  time: 4
+2:
+  tone: C
+  type: 1
+  octave: 0
+  instrum: PIANO
+  time: 8
+3:
+  tone: E
+  type: 0
+  octave: 0
+  instrum: PIANO
+  time: 12
+4:
+  tone: A
+  type: 0
+  octave: 1
+  instrum: PIANO
+  time: 16
