@@ -7,14 +7,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.github.ratismal.moneythief.handler.CommandHandler;
+import io.github.ratismal.moneythief.handler.EntityKillerListener;
+import io.github.ratismal.moneythief.handler.PlayerKillerListener;
+import io.github.ratismal.moneythief.config.Config;
+import io.github.ratismal.moneythief.util.FanfarePlayer;
+import io.github.ratismal.moneythief.util.ProcessMessage;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -31,9 +33,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.mcstats.Metrics;
+//import org.mcstats.Metrics;
 
 public class MoneyThief extends JavaPlugin {
 
+    private Config pluginconfig;
 
 	private String newVersionTitle = "";
 	private double newVersion = 0;
@@ -43,8 +47,8 @@ public class MoneyThief extends JavaPlugin {
 	public static MoneyThief plugin;
 	public Logger log = getLogger();
 	public Economy econ = null;
-	public Map<String, Object> configValues = new HashMap<String, Object>();
-	public Map<String, Object> mobValues = new HashMap<String, Object>();
+	//public Map<String, Object> configValues = new HashMap<String, Object>();
+	//public Map<String, Object> mobValues = new HashMap<String, Object>();
 	FanfarePlayer music;
 
 	public File songOneData = null;
@@ -74,8 +78,8 @@ public class MoneyThief extends JavaPlugin {
 		getSongOne();
 		getSongTwo();
 		getSongThree();
-		configValues = this.getConfig().getConfigurationSection("").getValues(true);
-		mobValues = this.getConfig().getConfigurationSection("mobs").getValues(true);
+
+		this.pluginconfig = new Config(this, getConfig());
 
 		if (!setupEconomy() ) {
 			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -89,8 +93,7 @@ public class MoneyThief extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Player Listener Enabled");
 		pm.registerEvents(new EntityKillerListener(this), this);
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Entity Listener Enabled");
-		
-		
+
 		//reloadCustomConfig();
 
 		currentVersionTitle = getDescription().getVersion().split("-")[0];
@@ -106,6 +109,7 @@ public class MoneyThief extends JavaPlugin {
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics failed to start");
 			}
 		}
+
 
 		//perform update check
 		this.getServer().getScheduler().runTask(this, new Runnable() {
@@ -150,8 +154,11 @@ public class MoneyThief extends JavaPlugin {
 			}
 
 		});
-
-	}
+        /**
+         * Commands
+         */
+        getCommand("moneythief").setExecutor(new CommandHandler(this, pluginconfig));
+    }
 
 	@Override
 	public void onDisable() {
@@ -172,94 +179,13 @@ public class MoneyThief extends JavaPlugin {
 		return econ != null;
 	}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		if ((cmd.getName().equalsIgnoreCase("moneythief")) && ((args.length == 0) || ((args.length == 1) 
-				&& (args[0] == "help"))) && (sender.hasPermission("moneythief"))) {
-			sender.sendMessage(ChatColor.GOLD + "|=======MoneyThief=======|");
-			sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief" + ChatColor.GOLD + " - Display this menu");
-			sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief reloadconfig" + ChatColor.GOLD + " - Reload configs");
-			sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief worth" + ChatColor.GOLD + " - Display the worth of lives");
-			sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief v" + ChatColor.GOLD + " - Displays plugin version");
-			return true;
-		}
-		else if ((sender.hasPermission("moneythief") == false)) {
-			noPerms(sender);
-			return true;
-		}
-		if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("v"))) {
-			sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.DARK_PURPLE + " is running on version " + getDescription().getVersion());
-			return true;
-		}
-
-		if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("reloadconfig")) 
-				&& (args.length == 1) && (sender.hasPermission("moneythief.reloadConfig"))) { 
-			this.reloadConfig();
-			this.reloadSongOne();
-			this.reloadSongTwo();
-			this.reloadSongThree();
-			this.getConfig();
-			this.getSongOne();
-			this.getSongTwo();
-			this.getSongThree();
-
-			configValues = this.getConfig().getConfigurationSection("").getValues(true);
-			mobValues = this.getConfig().getConfigurationSection("mobs").getValues(true);
-			sender.sendMessage(ChatColor.GOLD + "Configs reloaded!");
-
-			return true;
-		} 
-		else if ((sender.hasPermission("moneythief.reloadConfig") == false)) {
-			noPerms(sender);
-			return true;
-		}
-
-		if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("worth")) 
-				&& (args.length == 1) && (sender.hasPermission("moneythief.worth"))) {
-			// Get a set of the entries
-			@SuppressWarnings("rawtypes")
-			Set set = mobValues.entrySet();
-			// Get an iterator
-			@SuppressWarnings("rawtypes")
-			Iterator i = set.iterator();
-			// Display elements
-			while(i.hasNext()) {
-				@SuppressWarnings("rawtypes")
-				Map.Entry me = (Map.Entry)i.next();
-				String key = "" + me.getKey();
-				List<Double> listOfValues = this.getConfig().getDoubleList("mobs." + key);
-				sender.sendMessage(key + ": " + listOfValues.get(0) + " - " + listOfValues.get(1));
-			}
-			return true;
-		} 
-		else if ((sender.hasPermission("moneythief.worth") == false)) {
-			noPerms(sender);
-			return true;
-		}
-		return false; 
-	}
-
-
-
-	public String searchConfig(String mob) {
-		String worth = "" + mobValues.get(mob);
-		return worth;
-	}
-
-	public void noPerms(CommandSender sender) {
-		String noPerms = this.getConfig().getString("noperms");
-		noPerms = ChatColor.translateAlternateColorCodes('&', noPerms);
-		sender.sendMessage(noPerms);
-		return;
-	}
 
 	public void reloadSongOne() {
 		if (songOneData == null) {
 			songOneData = new File(getDataFolder(), "songs/songOne.yml");
 		}
 		song1 = YamlConfiguration.loadConfiguration(songOneData);
-
 		// Look for defaults in the jar
 		Reader defConfigStream = new InputStreamReader(this.getResource("songs/songOne.yml"));
 		if (defConfigStream != null) {
@@ -354,7 +280,7 @@ public class MoneyThief extends JavaPlugin {
 		if (songOneData == null) {
 			songOneData = new File(getDataFolder(), "songs/songOne.yml");
 		}
-		if (!songOneData.exists()) {            
+		if (!songOneData.exists()) {
 			plugin.saveResource("songs/songOne.yml", false);
 		}
 	}
@@ -362,7 +288,7 @@ public class MoneyThief extends JavaPlugin {
 		if (songTwoData == null) {
 			songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
 		}
-		if (!songTwoData.exists()) {            
+		if (!songTwoData.exists()) {
 			plugin.saveResource("songs/songTwo.yml", false);
 		}
 	}
@@ -371,7 +297,7 @@ public class MoneyThief extends JavaPlugin {
 		if (songThreeData == null) {
 			songThreeData = new File(getDataFolder(), "songs/songThree.yml");
 		}
-		if (!songThreeData.exists()) {            
+		if (!songThreeData.exists()) {
 			plugin.saveResource("songs/songThree.yml", false);
 		}
 	}
