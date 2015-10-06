@@ -70,7 +70,7 @@ public class MoneyThief extends JavaPlugin {
         getSongTwo();
         getSongThree();
 
-        this.pluginconfig = new Config(this, getConfig());
+        this.pluginconfig = new Config(getConfig());
 
         if (!setupEconomy()) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
@@ -87,7 +87,7 @@ public class MoneyThief extends JavaPlugin {
         currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.valueOf(currentVersionTitle.replaceFirst("\\.", ""));
 
-        if (getConfig().getBoolean("metrics")) {
+        if (Config.Metrics.isMetrics()) {
             try {
                 Metrics metrics = new Metrics(this);
                 metrics.start();
@@ -108,7 +108,7 @@ public class MoneyThief extends JavaPlugin {
 
                     @Override
                     public void run() {
-                        if (getServer().getConsoleSender().hasPermission("moneythief.update") && getConfig().getBoolean("update-check", true)) {
+                        if (getServer().getConsoleSender().hasPermission("moneythief.update") && Config.General.isCheckUpdate()) {
                             try {
                                 log.info("Running update checker...");
                                 newVersion = updateCheck(currentVersion);

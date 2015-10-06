@@ -13,7 +13,6 @@ import java.util.List;
 
 public class Config {
 
-    private MoneyThief plugin;
     private FileConfiguration config;
 
     /**
@@ -186,11 +185,9 @@ public class Config {
     /**
      * Config constructor
      *
-     * @param plugin MoneyThief plugin
      * @param config Config
      */
-    public Config(MoneyThief plugin, FileConfiguration config) {
-        this.plugin = plugin;
+    public Config(FileConfiguration config) {
         this.config = config;
         reload(this.config);
     }
@@ -242,7 +239,6 @@ public class Config {
             for (String name : mobSection.getKeys(false)) {
                 List<Double> values = mobSection.getDoubleList(name);
                 temp.put(name, values);
-                //plugin.getLogger().info("Adding " + name + " to mob list");
             }
         }
         Mobs.mobs = (HashMap<String, List<Double>>) temp.clone();
@@ -253,7 +249,6 @@ public class Config {
             for (String name : groupSection.getKeys(false)) {
                 List<Double> values = groupSection.getDoubleList(name);
                 temp.put(name, values);
-                //plugin.getLogger().info("Adding " + name + " to group list");
             }
         }
         Groups.groups = (HashMap<String, List<Double>>) temp.clone();

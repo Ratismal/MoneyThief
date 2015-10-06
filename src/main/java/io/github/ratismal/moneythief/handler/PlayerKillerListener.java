@@ -283,7 +283,7 @@ public class PlayerKillerListener implements Listener {
             music.songThree(killed);
 
         } else {
-            String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnv(), cause);
+            String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnvZero(), cause);
 
             if (!(toVictim.equalsIgnoreCase("none"))) {
                 killed.sendMessage(toVictim); //Message sent to victim upon
