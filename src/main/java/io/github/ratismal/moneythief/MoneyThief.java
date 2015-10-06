@@ -87,7 +87,7 @@ public class MoneyThief extends JavaPlugin {
         currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.valueOf(currentVersionTitle.replaceFirst("\\.", ""));
 
-        if (getConfig().getBoolean("metrics")) {
+        if (Config.Metrics.isMetrics()) {
             try {
                 Metrics metrics = new Metrics(this);
                 metrics.start();
@@ -108,7 +108,7 @@ public class MoneyThief extends JavaPlugin {
 
                     @Override
                     public void run() {
-                        if (getServer().getConsoleSender().hasPermission("moneythief.update") && getConfig().getBoolean("update-check", true)) {
+                        if (getServer().getConsoleSender().hasPermission("moneythief.update") && Config.General.isCheckUpdate()) {
                             try {
                                 log.info("Running update checker...");
                                 newVersion = updateCheck(currentVersion);
