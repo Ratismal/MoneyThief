@@ -45,7 +45,6 @@ public class FanfarePlayer {
 		Tone tone;
 		Instrument instrument;
 		while (song1.get("" + i) != null) {
-			//log.info("Note id: " + i);
 			octave = song1.getInt(i + ".octave");
 			type = song1.getInt(i + ".type");
 			toneS = song1.getString(i + ".tone");
@@ -83,7 +82,6 @@ public class FanfarePlayer {
 		Tone tone;
 		Instrument instrument;
 		while (song2.get("" + i) != null) {
-			//log.info("Note id: " + i);
 			octave = song2.getInt(i + ".octave");
 			type = song2.getInt(i + ".type");
 			toneS = song2.getString(i + ".tone");
@@ -121,7 +119,6 @@ public class FanfarePlayer {
 		Tone tone;
 		Instrument instrument;
 		while (song3.get("" + i) != null) {
-			//log.info("Note id: " + i);
 			octave = song3.getInt(i + ".octave");
 			type = song3.getInt(i + ".type");
 			toneS = song3.getString(i + ".tone");
@@ -217,8 +214,6 @@ public class FanfarePlayer {
 	public void natural(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;
-
-		//final Note note = played;
 		final Note note = Note.natural(octave, tone);
 		final BukkitScheduler scheduler = MoneyThief.plugin.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(MoneyThief.plugin, new Runnable() {
@@ -242,8 +237,6 @@ public class FanfarePlayer {
 	public void sharp(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;
-
-		//final Note note = played;
 		final Note note = Note.sharp(octave, tone);
 		final BukkitScheduler scheduler = MoneyThief.plugin.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(MoneyThief.plugin, new Runnable() {
@@ -267,7 +260,6 @@ public class FanfarePlayer {
 	public void flat(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;
-		//final Note note = played;
 		final Note note = Note.flat(octave, tone);
 		final BukkitScheduler scheduler = MoneyThief.plugin.getServer().getScheduler();
 		scheduler.scheduleSyncDelayedTask(MoneyThief.plugin, new Runnable() {

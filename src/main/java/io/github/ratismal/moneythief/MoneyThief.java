@@ -42,9 +42,6 @@ public class MoneyThief extends JavaPlugin {
 	public static MoneyThief plugin;
 	public Logger log = getLogger();
 	public Economy econ = null;
-	//public Map<String, Object> configValues = new HashMap<String, Object>();
-	//public Map<String, Object> mobValues = new HashMap<String, Object>();
-	FanfarePlayer music;
 
 	public File songOneData = null;
 	public FileConfiguration song1 = null;
@@ -59,8 +56,6 @@ public class MoneyThief extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		//saveCustomConfig();
-		//log.info("Running on version " + getDescription().getVersion());
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Plugin by Ratismal");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Check for updates at: ");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief]" + ChatColor.AQUA + " http://dev.bukkit.org/bukkit-plugins/moneythief/");
@@ -90,8 +85,6 @@ public class MoneyThief extends JavaPlugin {
 		pm.registerEvents(new EntityKillerListener(this), this);
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Entity Listener Enabled");
 
-		//reloadCustomConfig();
-
 		currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.valueOf(currentVersionTitle.replaceFirst("\\.", ""));
 
@@ -101,27 +94,17 @@ public class MoneyThief extends JavaPlugin {
 				metrics.start();
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics started");
 			} catch (IOException e) {
-				// Failed to submit the stats :-(
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics failed to start");
 			}
 		}
 
-
-		//perform update check
+        /**
+         * Initiate update checker
+         */
 		this.getServer().getScheduler().runTask(this, new Runnable() {
 
 			@Override
 			public void run() {
-				// Programmatically set the default permission value cause Bukkit doesn't handle plugin.yml properly for Load order STARTUP plugins
-				org.bukkit.permissions.Permission perm = getServer().getPluginManager().getPermission("moneythief.update");
-				if (perm == null)
-				{
-					perm = new org.bukkit.permissions.Permission("moneythief.update");
-					perm.setDefault(PermissionDefault.OP);
-					plugin.getServer().getPluginManager().addPermission(perm);
-				}
-				perm.setDescription("Allows a user or the console to check for moneythief updates");
-
 				getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
 					@Override
@@ -150,8 +133,8 @@ public class MoneyThief extends JavaPlugin {
 			}
 
 		});
-        /**
-         * Commands
+        /*
+        Add commands
          */
         getCommand("moneythief").setExecutor(new CommandHandler(this, pluginconfig));
     }
@@ -190,7 +173,6 @@ public class MoneyThief extends JavaPlugin {
 			songOneData = new File(getDataFolder(), "songs/songOne.yml");
 		}
 		song1 = YamlConfiguration.loadConfiguration(songOneData);
-		// Look for defaults in the jar
 		Reader defConfigStream1 = new InputStreamReader(this.getResource("songs/songOne.yml"));
 		if (defConfigStream1 != null) {
 			YamlConfiguration defConfig1 = YamlConfiguration.loadConfiguration(defConfigStream1);
@@ -202,7 +184,6 @@ public class MoneyThief extends JavaPlugin {
         }
         song2 = YamlConfiguration.loadConfiguration(songTwoData);
 
-        // Look for defaults in the jar
         Reader defConfigStream2 = new InputStreamReader(this.getResource("songs/songTwo.yml"));
         if (defConfigStream2 != null) {
             YamlConfiguration defConfig2 = YamlConfiguration.loadConfiguration(defConfigStream2);
@@ -214,7 +195,6 @@ public class MoneyThief extends JavaPlugin {
         }
         song3 = YamlConfiguration.loadConfiguration(songThreeData);
 
-        // Look for defaults in the jar
         Reader defConfigStream3 = new InputStreamReader(this.getResource("songs/songThree.yml"));
         if (defConfigStream3 != null) {
             YamlConfiguration defConfig3 = YamlConfiguration.loadConfiguration(defConfigStream3);

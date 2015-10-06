@@ -187,10 +187,6 @@ public class PlayerKillerListener implements Listener {
         }
         entity = entity.toLowerCase();
 
-        //String killedName = killed.getDisplayName();
-        //String killerName = killer.getDisplayName();
-
-
         if (econ.getBalance(killed) > 0) {
 
             double balKilled = econ.getBalance(killed);
@@ -199,8 +195,6 @@ public class PlayerKillerListener implements Listener {
                 if (PermissionChecker.hasPermission(killed, "moneythief.group." + group)) {
                     if (Config.Groups.getGroups().get(group).size() > 1) {
                         moneyLost = moneyLost * Config.Groups.getGroups().get(group).get(1);
-                        //plugin.getLogger().info("Multiplying worth according to " +
-                        //        group + " (" + Config.Groups.getGroups().get(group).get(1) + ")");
                     }
                 }
             }
@@ -208,9 +202,6 @@ public class PlayerKillerListener implements Listener {
             moneyLost = moneyLost / 100;
             int major = (int) moneyLost;
             int minor = (int) ((moneyLost - major) * 100);
-            //System.out.println(major + " " + minor);
-
-
 
             String toVictim = MessageProcessor.processMobPVE(Config.Message.getPveVictimMob(), entity, moneyLost, major, minor, prefix);
 
@@ -225,18 +216,10 @@ public class PlayerKillerListener implements Listener {
                     event.setDeathMessage(pveMessage);
                 }
             }
-            //System.out.println("Withdrawing " + moneyLost);
             econ.withdrawPlayer(killed, moneyLost);
-            //econ.
             KillLogger.logPve(killed, entity, true);
             music.songThree(killed);
         } else {
-
-            //String killedName = killed.getDisplayName();
-
-            //killer = event.getEntity().getKiller().getType();
-            //killed = event.getEntity();
-            //entity = "" + killer;
             firstLetter = entity.substring(0, 1).toLowerCase();
             if ((firstLetter).equals("a") || (firstLetter).equals("e") ||
                     (firstLetter).equals("i") || (firstLetter).equals("o")) {
@@ -276,27 +259,18 @@ public class PlayerKillerListener implements Listener {
             for (String group : Config.Groups.getGroups().keySet()) {
                 if (PermissionChecker.hasPermission(killed, "moneythief.group." + group)) {
                     if (Config.Groups.getGroups().get(group).size() > 1) {
-                        //plugin.getLogger().info(moneyLost + "");
                         moneyLost = moneyLost * Config.Groups.getGroups().get(group).get(1);
-                        //plugin.getLogger().info("Multiplying worth according to " +
-                        //        group + " (" + Config.Groups.getGroups().get(group).get(1) + ")");
-                       // plugin.getLogger().info(moneyLost + "");
                     }
                 }
             }
             moneyLost = Math.round(moneyLost * 100);
             moneyLost = moneyLost / 100;
-            //plugin.getLogger().info(moneyLost + "");
             int major = (int) moneyLost;
             int minor = (int) ((moneyLost - major) * 100);
-            //System.out.println(major + " " + minor);
-
-
 
             String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnv(), cause, moneyLost, major, minor);
 
             econ.withdrawPlayer(killed, moneyLost);
-            //econ.
             if (!(toVictim.equalsIgnoreCase("none"))) {
                 killed.sendMessage(toVictim); //Message sent to victim upon
             }

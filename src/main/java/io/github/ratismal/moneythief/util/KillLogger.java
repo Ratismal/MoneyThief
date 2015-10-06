@@ -39,9 +39,6 @@ public class KillLogger {
                 PrintWriter out = new PrintWriter(bw);
                 out.println(content);
                 bw.close();
-
-                //System.out.println("Done");
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,9 +76,6 @@ public class KillLogger {
                 PrintWriter out = new PrintWriter(bw);
                 out.println(content);
                 bw.close();
-
-                //System.out.println("Done");
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

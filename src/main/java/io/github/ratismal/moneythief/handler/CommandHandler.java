@@ -132,7 +132,6 @@ public class CommandHandler implements CommandExecutor {
                     message = message + " - ";
                 }
                 message = message + list.get(i);
-                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
             }
             sender.sendMessage(ChatColor.LIGHT_PURPLE + "  " + message);
         }
@@ -154,7 +153,6 @@ public class CommandHandler implements CommandExecutor {
                     message = message + " - ";
                 }
                 message = message + list.get(i);
-                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
             }
             sender.sendMessage(ChatColor.LIGHT_PURPLE + "  " + message);
         }

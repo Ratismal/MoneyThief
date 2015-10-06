@@ -33,7 +33,6 @@ public class EntityKillerListener implements Listener {
     public EntityKillerListener(MoneyThief instance) {
         plugin = instance;
         econ = instance.econ;
-        //music = instance2;
     }
 
     //A list of mobs that have been artificially spawned
@@ -59,10 +58,7 @@ public class EntityKillerListener implements Listener {
      */
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
-        //spawnedNotNatural.containsKey()
-
         if (Config.PVE.isArtificialSpawn() || !spawnedNotNatural.containsKey(event.getEntity().getEntityId())) {
-            //config.getBoolean("artificial-spawn", true) ||
             if ((Bukkit.getOnlinePlayers().contains(event.getEntity().getKiller())) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
                 if (!(event.getEntity() instanceof Player)) {
                     music = new FanfarePlayer(MoneyThief.plugin);
@@ -75,8 +71,6 @@ public class EntityKillerListener implements Listener {
                     for (String group : Config.Groups.getGroups().keySet()) {
                         if (PermissionChecker.hasPermission(killer, "moneythief.group." + group)) {
                             worth = worth * Config.Groups.getGroups().get(group).get(0);
-                            //plugin.getLogger().info("Multiplying worth according to " +
-                            //        group + " (" + Config.Groups.getGroups().get(group).get(0) + ")");
                         }
                     }
                     if (worth != 0) {
