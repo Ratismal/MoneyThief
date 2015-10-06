@@ -195,12 +195,14 @@ public class Config {
 
         //Mobs
         ConfigurationSection mobSection = config.getConfigurationSection("mobs");
+        HashMap<String, List<Double>> temp = new HashMap<String, List<Double>>();
         if (mobSection != null) {
             for (String name : mobSection.getKeys(false)) {
                 List<Double> values = mobSection.getDoubleList(name);
-                Mobs.mobs.put(name, values);
+                temp.put(name, values);
             }
         }
+        Mobs.mobs = temp;
     }
 
 
