@@ -38,7 +38,7 @@ pvp:
 pve:
   # Percent of money that a player loses when killed via PVE
   percent-lost: 5
-  # Artificially spawned mobs count
+  # Artificially spawned mobs yeild rewards
   artificial-spawn: true
 
 #==================
@@ -78,7 +78,7 @@ message:
     victim: "&6You were killed by %KILLER&6.\n&6You lost $%MONEYTAKEN, and $%MONEYLOST of it disappeared into the aether."
     killer: "&6You killed %VICTIM&6, and looted $%MONEYGAINED off of the body."
 
-    # Sent to the victim/killer respectively upon a pvp even when victim has no money
+    # Sent to the victim/killer respectively upon a pvp event when victim has no money
     victim-zero: "&6You were killed by %KILLER&6, but you had nothing to lose!"
     killer-zero: "&6You killed %VICTIM&6, but they had no money to loot."
 
@@ -108,15 +108,15 @@ message:
     # Used as %CAUSE when death cause is unknown
     generic-cause: "something"
 
-    # Replaces pve death messages. Set to "none" to not change message, set to "disable" to disable it entirely.
+    # Replaces PVE death messages. Set to "none" to not change message, set to "disable" to disable it entirely.
     death-message: "none"
 
 #==================
 #       Mobs
 #==================
-  # Mobs are expandable. If I've missed one, simply put it's name below
+  # Mobs are expandable. If I've missed one, simply put it's name below.
   # Mobs have two values, a high and a low. The value given to the killer
-  # randomly set between the two values.
+  # randomly calculated between the two values.
 mobs:
   PIG:
   - 5.0
@@ -208,3 +208,7 @@ mobs:
   WITHER:
   - 150.0
   - 200.0
+  # DEFAULT will apply to any mob that's not listed here.
+  #DEFAULT:
+  #- 5.0
+  #- 10.0
