@@ -25,11 +25,19 @@ public class PlayerKillerListener implements Listener {
     MoneyThief plugin;
     FanfarePlayer music;
 
+    /**
+     * PlayerKillerListener construct
+     * @param instance MoneyThief plugin
+     */
     public PlayerKillerListener(MoneyThief instance) {
         plugin = instance;
         econ = instance.econ;
     }
 
+    /**
+     * Rewards or penalizes a player for dying/killing another player
+     * @param event PlayerDeathEvent
+     */
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         this.music = new FanfarePlayer(this.plugin);
@@ -62,6 +70,10 @@ public class PlayerKillerListener implements Listener {
         }
     }
 
+    /**
+     * Event is pvp, reward killer and penalize killed
+     * @param event PlayerDeathEvent
+     */
     private void pvp(PlayerDeathEvent event) {
 
         double gained = Config.PVP.getGained();
@@ -151,6 +163,11 @@ public class PlayerKillerListener implements Listener {
         }
     }
 
+    /**
+     * Player was killed by a mob, penalize
+     * @param event PlayerDeathEvent
+     * @param lost Percent of balance player loses
+     */
     public void pveMob(PlayerDeathEvent event, double lost) {
         Entity killer = getCausedEntity(event);
         if (killer == null) return;
@@ -235,6 +252,11 @@ public class PlayerKillerListener implements Listener {
         }
     }
 
+    /**
+     * Player died from environment, penalize
+     * @param event PlayerDeathEvent
+     * @param lost Percent of balance player loses
+     */
     public void pveEnv(PlayerDeathEvent event, double lost) {
         EntityDamageEvent.DamageCause damageCause = getCause(event);
         String cause;
@@ -293,6 +315,11 @@ public class PlayerKillerListener implements Listener {
         }
     }
 
+    /**
+     * Get the entity that caused the death
+     * @param event EntityDeathEvent
+     * @return Murdering entity
+     */
     public static Entity getCausedEntity(PlayerDeathEvent event) {
         EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
         if (damageEvent != null && !damageEvent.isCancelled() && (damageEvent instanceof EntityDamageByEntityEvent)) {
@@ -302,11 +329,21 @@ public class PlayerKillerListener implements Listener {
         return null;
     }
 
+    /**
+     * Checks if player was killed by a mob or environment
+     * @param event PlayerDeathEvent
+     * @return true if killed by mob
+     */
     public static boolean wasKilledByMob(PlayerDeathEvent event) {
         EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
         return damageEvent != null && !damageEvent.isCancelled() && (damageEvent instanceof EntityDamageByEntityEvent);
     }
 
+    /**
+     * Get what killed player (non-mob)
+     * @param event PlayerDeathEvent
+     * @return Cause of death
+     */
     public static EntityDamageEvent.DamageCause getCause(PlayerDeathEvent event) {
         EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
         if (damageEvent != null && !damageEvent.isCancelled()) {

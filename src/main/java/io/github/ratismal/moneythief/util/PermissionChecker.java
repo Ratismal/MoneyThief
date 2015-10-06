@@ -10,6 +10,12 @@ import org.bukkit.permissions.PermissionDefault;
 
 public class PermissionChecker {
 
+    /**
+     * Checks if player has permission node, not including OP permissions
+     * @param player player
+     * @param permission Permission in question
+     * @return true if they have the permission
+     */
     public static boolean hasPermission(Player player, String permission) {
         Permission perm = new Permission(permission, PermissionDefault.FALSE);
 

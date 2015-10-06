@@ -13,9 +13,13 @@ import org.bukkit.scheduler.BukkitScheduler;
 public class FanfarePlayer {
 
 	MoneyThief plugin;
+
+    /**
+     * FanfarePlayer construct
+     * @param instance MoneyThief plugin
+     */
 	public FanfarePlayer (MoneyThief instance) {
 		plugin = instance;
-		
 	}
 
 	Logger log = MoneyThief.plugin.log;
@@ -24,6 +28,10 @@ public class FanfarePlayer {
 	FileConfiguration song2;
 	FileConfiguration song3;
 
+    /**
+     * Plays song1 to player
+     * @param player player
+     */
 	public void songOne(Player player) {
 		song1 = MoneyThief.plugin.getSongOne();
 		song2 = MoneyThief.plugin.getSongTwo();
@@ -58,6 +66,10 @@ public class FanfarePlayer {
 		}
 	}
 
+    /**
+     * Plays song2 to player
+     * @param player player
+     */
 	public void songTwo(Player player) {
 		song1 = MoneyThief.plugin.getSongOne();
 		song2 = MoneyThief.plugin.getSongTwo();
@@ -92,6 +104,10 @@ public class FanfarePlayer {
 		}
 	}
 
+    /**
+     * Plays song3 to player
+     * @param player player
+     */
 	public void songThree(Player player) {
 		song1 = MoneyThief.plugin.getSongOne();
 		song2 = MoneyThief.plugin.getSongTwo();
@@ -126,6 +142,11 @@ public class FanfarePlayer {
 		}
 	}
 
+    /**
+     * Identifies which instrument to play note with
+     * @param instrum Instrument ID
+     * @return The instrument to use
+     */
 	public Instrument identifyInstrum(String instrum) {
 		Instrument instrument = null;
 		if (instrum.equals("BASS_DRUM")) {
@@ -150,6 +171,11 @@ public class FanfarePlayer {
 		return instrument;
 	}
 
+    /**
+     * Identifies which note to play
+     * @param toneS The note's ID
+     * @return The note to play
+     */
 	public Tone identifyTone(String toneS) {
 		Tone tone = null;
 		if (toneS.equals("A")) {
@@ -180,6 +206,14 @@ public class FanfarePlayer {
 		return tone;
 	}
 
+    /**
+     * Plays a natural note
+     * @param player player
+     * @param tone note
+     * @param octave octave
+     * @param instrum instrument
+     * @param delay delay
+     */
 	public void natural(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;
@@ -197,6 +231,14 @@ public class FanfarePlayer {
 		}, delay);
 	}
 
+    /**
+     * Plays a sharp note
+     * @param player player
+     * @param tone note
+     * @param octave octave
+     * @param instrum instrument
+     * @param delay delay
+     */
 	public void sharp(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;
@@ -214,6 +256,14 @@ public class FanfarePlayer {
 		}, delay);
 	}
 
+    /**
+     * Plays a flat note
+     * @param player player
+     * @param tone note
+     * @param octave octave
+     * @param instrum instrument
+     * @param delay delay
+     */
 	public void flat(Player player, Tone tone, int octave, Instrument instrum, long delay) {
 		final Player play = player;
 		final Instrument inst = instrum;

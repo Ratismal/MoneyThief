@@ -14,6 +14,11 @@ import java.util.Calendar;
 
 public class KillLogger {
 
+    /**
+     * Log a PVP event
+     * @param killer Player who killed
+     * @param killed Player killed
+     */
     public static void logPvp(Player killer, Player killed) {
         if (Config.General.isLogKills()) {
             try {
@@ -43,6 +48,12 @@ public class KillLogger {
         }
     }
 
+    /**
+     *
+     * @param player The player
+     * @param entity The entity/cause
+     * @param playerWasKilled  true if the entity killed the player, false otherwise
+     */
     public static void logPve(Player player, String entity, boolean playerWasKilled) {
         if (Config.General.isLogKills()) {
             try {

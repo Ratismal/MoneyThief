@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.github.ratismal.moneythief.handler.CommandHandler;
@@ -54,6 +53,9 @@ public class MoneyThief extends JavaPlugin {
 	public File songThreeData = null;
 	public FileConfiguration song3 = null;
 
+    /**
+     * Called when plugin is enabled
+     */
 	@Override
 	public void onEnable() {
 
@@ -66,9 +68,7 @@ public class MoneyThief extends JavaPlugin {
 
 		PluginManager pm = this.getServer().getPluginManager();
 
-		this.saveDefaultSongOne();
-		this.saveDefaultSongTwo();
-		this.saveDefaultSongThree();
+		this.saveDefaultSongs();
 		this.saveDefaultConfig();
 		getConfig();
 		getSongOne();
@@ -156,13 +156,20 @@ public class MoneyThief extends JavaPlugin {
         getCommand("moneythief").setExecutor(new CommandHandler(this, pluginconfig));
     }
 
+    /**
+     * Called when plugin is disabled
+     */
 	@Override
 	public void onDisable() {
-		log.info("onDisable has been invoked!");
 		getServer().getServicesManager().unregisterAll(this);
 		Bukkit.getScheduler().cancelTasks(this);
+        getLogger().info("Plugin has been disabled!");
 	}
 
+    /**
+     * Sets up vault economy
+     * @return true if economy is initialized
+     */
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
@@ -175,129 +182,110 @@ public class MoneyThief extends JavaPlugin {
 		return econ != null;
 	}
 
-
-
-	public void reloadSongOne() {
+    /**
+     * Load/reload songs, or create if they don't exist
+     */
+	public void reloadSongs() {
 		if (songOneData == null) {
 			songOneData = new File(getDataFolder(), "songs/songOne.yml");
 		}
 		song1 = YamlConfiguration.loadConfiguration(songOneData);
 		// Look for defaults in the jar
-		Reader defConfigStream = new InputStreamReader(this.getResource("songs/songOne.yml"));
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			song1.setDefaults(defConfig);
+		Reader defConfigStream1 = new InputStreamReader(this.getResource("songs/songOne.yml"));
+		if (defConfigStream1 != null) {
+			YamlConfiguration defConfig1 = YamlConfiguration.loadConfiguration(defConfigStream1);
+			song1.setDefaults(defConfig1);
 		}
+
+        if (songTwoData == null) {
+            songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
+        }
+        song2 = YamlConfiguration.loadConfiguration(songTwoData);
+
+        // Look for defaults in the jar
+        Reader defConfigStream2 = new InputStreamReader(this.getResource("songs/songTwo.yml"));
+        if (defConfigStream2 != null) {
+            YamlConfiguration defConfig2 = YamlConfiguration.loadConfiguration(defConfigStream2);
+            song2.setDefaults(defConfig2);
+        }
+
+        if (songThreeData == null) {
+            songThreeData = new File(getDataFolder(), "songs/songThree.yml");
+        }
+        song3 = YamlConfiguration.loadConfiguration(songThreeData);
+
+        // Look for defaults in the jar
+        Reader defConfigStream3 = new InputStreamReader(this.getResource("songs/songThree.yml"));
+        if (defConfigStream3 != null) {
+            YamlConfiguration defConfig3 = YamlConfiguration.loadConfiguration(defConfigStream3);
+            song3.setDefaults(defConfig3);
+        }
 	}
 
+    /**
+     * Get song one
+     * @return song1
+     */
 	public FileConfiguration getSongOne() {
-		if (song1 == null) {
-			reloadSongOne();
-		}
-		return song1;
-	}
+        if (song1 == null) {
+            reloadSongs();
+        }
+        return song1;
+    }
 
-	public void saveSongOne() {
-		if (song1 == null || songOneData == null) {
-			return;
-		}
-		try {
-			getSongOne().save(songOneData);
-		} catch (IOException ex) {
-			getLogger().log(Level.SEVERE, "Could not save config to " + songOneData, ex);
-		}
-	}
-
-	public void reloadSongTwo() {
-		if (songTwoData == null) {
-			songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
-		}
-		song2 = YamlConfiguration.loadConfiguration(songTwoData);
-
-		// Look for defaults in the jar
-		Reader defConfigStream = new InputStreamReader(this.getResource("songs/songTwo.yml"));
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			song2.setDefaults(defConfig);
-		}
-	}
-
+    /**
+     * Get song two
+     * @return song2
+     */
 	public FileConfiguration getSongTwo() {
 		if (song2 == null) {
-			reloadSongTwo();
+			reloadSongs();
 		}
 		return song2;
 	}
 
-	public void saveSongTwo() {
-		if (song2 == null || songTwoData == null) {
-			return;
-		}
-		try {
-			getSongTwo().save(songTwoData);
-		} catch (IOException ex) {
-			getLogger().log(Level.SEVERE, "Could not save config to " + songTwoData, ex);
-		}
-	}
-
-	public void reloadSongThree() {
-		if (songThreeData == null) {
-			songThreeData = new File(getDataFolder(), "songs/songThree.yml");
-		}
-		song3 = YamlConfiguration.loadConfiguration(songThreeData);
-
-		// Look for defaults in the jar
-		Reader defConfigStream = new InputStreamReader(this.getResource("songs/songThree.yml"));
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			song3.setDefaults(defConfig);
-		}
-	}
-
+    /**
+     * Get song three
+     * @return song3
+     */
 	public FileConfiguration getSongThree() {
 		if (song3 == null) {
-			reloadSongThree();
+			reloadSongs();
 		}
 		return song3;
 	}
 
-	public void saveSongThree() {
-		if (song3 == null || songThreeData == null) {
-			return;
-		}
-		try {
-			getSongThree().save(songThreeData);
-		} catch (IOException ex) {
-			getLogger().log(Level.SEVERE, "Could not save config to " + songThreeData, ex);
-		}
-	}
-
-	public void saveDefaultSongOne() {
+    /**
+     * Saves default songs, or creates if they don't exist
+     */
+	public void saveDefaultSongs() {
 		if (songOneData == null) {
 			songOneData = new File(getDataFolder(), "songs/songOne.yml");
 		}
 		if (!songOneData.exists()) {
 			plugin.saveResource("songs/songOne.yml", false);
 		}
-	}
-	public void saveDefaultSongTwo() {
-		if (songTwoData == null) {
-			songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
-		}
-		if (!songTwoData.exists()) {
-			plugin.saveResource("songs/songTwo.yml", false);
-		}
+
+        if (songTwoData == null) {
+            songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
+        }
+        if (!songTwoData.exists()) {
+            plugin.saveResource("songs/songTwo.yml", false);
+        }
+
+        if (songThreeData == null) {
+            songThreeData = new File(getDataFolder(), "songs/songThree.yml");
+        }
+        if (!songThreeData.exists()) {
+            plugin.saveResource("songs/songThree.yml", false);
+        }
 	}
 
-	public void saveDefaultSongThree() {
-		if (songThreeData == null) {
-			songThreeData = new File(getDataFolder(), "songs/songThree.yml");
-		}
-		if (!songThreeData.exists()) {
-			plugin.saveResource("songs/songThree.yml", false);
-		}
-	}
-
+    /**
+     * Checks if there is an available update (Adapted from Vault's update checker)
+     * @param currentVersion Current plugin version
+     * @return Latest version
+     */
 	public double updateCheck(double currentVersion) {
 		try {
 			URL url = new URL("https://api.curseforge.com/servermods/files?projectids=89728");

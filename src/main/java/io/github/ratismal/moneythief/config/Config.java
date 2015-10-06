@@ -16,8 +16,12 @@ public class Config {
     private MoneyThief plugin;
     private FileConfiguration config;
 
-    /*
-    Configs
+    /**
+     * Configs
+     */
+
+    /**
+     * Metrics
      */
     public static final class Metrics {
         public static boolean isMetrics() {
@@ -27,6 +31,9 @@ public class Config {
         private static boolean metrics;
     }
 
+    /**
+     * General
+     */
     public static final class General {
         public static boolean isCheckUpdate() {
             return checkUpdate;
@@ -45,6 +52,9 @@ public class Config {
         private static boolean logKills;
     }
 
+    /**
+     * PVP
+     */
     public static final class PVP {
         public static double getGained() {
             return gained;
@@ -58,6 +68,9 @@ public class Config {
         private static double lost;
     }
 
+    /**
+     * PVE
+     */
     public static final class PVE {
         public static double getLost() {
             return lost;
@@ -71,6 +84,9 @@ public class Config {
         private static boolean artificialSpawn;
     }
 
+    /**
+     * Messages
+     */
     public static final class Message {
         public static String getNoPerms() {
             return noPerms;
@@ -144,6 +160,9 @@ public class Config {
         private static String pveDeathMessage;
     }
 
+    /**
+     * Mobs
+     */
     public static final class Mobs {
         public static HashMap<String, List<Double>> getMobs() {
             return mobs;
@@ -152,6 +171,9 @@ public class Config {
         private static HashMap<String, List<Double>> mobs = new HashMap<String, List<Double>>();
     }
 
+    /**
+     * Groups
+     */
     public static final class Groups {
 
         public static HashMap<String, List<Double>> getGroups() {
@@ -161,12 +183,21 @@ public class Config {
         private static HashMap<String, List<Double>> groups = new HashMap<String, List<Double>>();
     }
 
+    /**
+     * Config constructor
+     * @param plugin MoneyThief plugin
+     * @param config Config
+     */
     public Config(MoneyThief plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
         reload(this.config);
     }
 
+    /**
+     * Reloads the config
+     * @param config
+     */
     public void reload(FileConfiguration config) {
         //Metrics
         Metrics.metrics = config.getBoolean("metrics");

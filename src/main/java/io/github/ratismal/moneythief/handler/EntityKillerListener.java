@@ -26,23 +26,37 @@ public class EntityKillerListener implements Listener {
     private Economy econ;
     private FanfarePlayer music;
 
+    /**
+     * EntityKillerListener constructor
+     * @param instance MoneyThief plugin
+     */
     public EntityKillerListener(MoneyThief instance) {
         plugin = instance;
         econ = instance.econ;
         //music = instance2;
     }
 
-
+    //A list of mobs that have been artificially spawned
     private static HashMap<Integer, Boolean> spawnedNotNatural = new HashMap<>();
 
-
+    /**
+     * Determines if a mob has been spawned in artificially,
+     * and if it has been put it in the spawnedNotNatural list
+     * @param event CreatureSpawnEvent
+     */
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) {
-            spawnedNotNatural.put(event.getEntity().getEntityId(), true);
+        if (!Config.PVE.isArtificialSpawn()) {
+            if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) {
+                spawnedNotNatural.put(event.getEntity().getEntityId(), true);
+            }
         }
     }
 
+    /**
+     * Reward player for killing a mob
+     * @param event EntityDeathEvent
+     */
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         //spawnedNotNatural.containsKey()
@@ -102,6 +116,11 @@ public class EntityKillerListener implements Listener {
         }
     }
 
+    /**
+     * Searches Config.Mobs.mobs for a mob
+     * @param mob mob to search for
+     * @return the mob's worth
+     */
     public double searchConfig(String mob) {
         Double worth = 0.0;
         HashMap<String, List<Double>> list = Config.Mobs.getMobs();
@@ -109,7 +128,12 @@ public class EntityKillerListener implements Listener {
             if (list.containsKey(mob)) {
                 List<Double> mobWorth = Config.Mobs.getMobs().get(mob);
                 Double low = mobWorth.get(0);
-                Double high = mobWorth.get(1);
+                Double high;
+                if (mobWorth.size() >= 2) {
+                    high = mobWorth.get(1);
+                } else {
+                    high = low;
+                }
                 Random r = new Random();
                 worth = low + (high - low) * r.nextDouble();
             } else if (Config.Mobs.getMobs().containsKey("DEFAULT")) {

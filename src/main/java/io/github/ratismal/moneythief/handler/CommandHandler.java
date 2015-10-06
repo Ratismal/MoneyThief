@@ -19,6 +19,11 @@ public class CommandHandler implements CommandExecutor {
     private MoneyThief plugin;
     private Config config;
 
+    /**
+     * CommandHandler constructor
+     * @param plugin MoneyThief plugin
+     * @param config config
+     */
     public CommandHandler(MoneyThief plugin, Config config) {
         this.plugin = plugin;
         this.config = config;
@@ -31,7 +36,7 @@ public class CommandHandler implements CommandExecutor {
      * @param cmd    Command that was sent
      * @param label  Command alias that was used
      * @param args   Arguments that followed command
-     * @return True if successful
+     * @return true if successful
      */
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("moneythief")) {
@@ -76,6 +81,12 @@ public class CommandHandler implements CommandExecutor {
         return false;
     }
 
+    /**
+     * Check if sender has permissions to do command
+     * @param sender player who did command
+     * @param perm permission to check
+     * @return true if they have permission
+     */
     boolean hasPerm(CommandSender sender, String perm) {
         if (!sender.hasPermission(perm)) {
             noPerms(sender);
@@ -84,6 +95,10 @@ public class CommandHandler implements CommandExecutor {
         return true;
     }
 
+    /**
+     * Sends help message to player
+     * @param sender player
+     */
     void help(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "|=======MoneyThief=======|");
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief" + ChatColor.GOLD + " - Display this menu");
@@ -93,10 +108,18 @@ public class CommandHandler implements CommandExecutor {
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief v" + ChatColor.GOLD + " - Displays plugin version");
     }
 
+    /**
+     * Tells player plugin version
+     * @param sender player
+     */
     void version(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.LIGHT_PURPLE + " is running on version " + plugin.getDescription().getVersion());
     }
 
+    /**
+     * Tells player a list of all mobs in config, and how much they're worth
+     * @param sender player
+     */
     void worth(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob Values:");
         for (String key : Config.Mobs.getMobs().keySet()){
@@ -115,6 +138,10 @@ public class CommandHandler implements CommandExecutor {
         }
     }
 
+    /**
+     * Tells the player a list of all groups in config, and their values
+     * @param sender player
+     */
     void groups(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group Values:");
         for (String key : Config.Groups.getGroups().keySet()){
@@ -133,6 +160,11 @@ public class CommandHandler implements CommandExecutor {
         }
     }
 
+    /**
+     * Tell the player how much a specific mob is worth
+     * @param sender player
+     * @param mob mob
+     */
     public void searchMobs(CommandSender sender, String mob) {
         String msg;
 
@@ -155,6 +187,11 @@ public class CommandHandler implements CommandExecutor {
         sender.sendMessage(msg);
     }
 
+    /**
+     * Tells a player the values for a specific group
+     * @param sender player
+     * @param group group
+     */
     public void searchGroups(CommandSender sender, String group) {
         String msg;
 
@@ -179,17 +216,23 @@ public class CommandHandler implements CommandExecutor {
         sender.sendMessage(msg);
     }
 
+    /**
+     * Tells the player they don't have permissions to do a command
+     * @param sender player
+     */
     public void noPerms(CommandSender sender) {
         String noPerms = Config.Message.getNoPerms();
         noPerms = MessageProcessor.processGeneral(noPerms);
         sender.sendMessage(noPerms);
     }
 
+    /**
+     * Reloads the configs, and tells the player it has been reloaded
+     * @param sender player
+     */
     public void reloadConfig(CommandSender sender) {
         plugin.reloadConfig();
-        plugin.reloadSongOne();
-        plugin.reloadSongTwo();
-        plugin.reloadSongThree();
+        plugin.reloadSongs();
         plugin.getConfig();
         plugin.getSongOne();
         plugin.getSongTwo();
