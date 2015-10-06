@@ -61,8 +61,8 @@ public class EntityKillerListener implements Listener {
                     for (String group : Config.Groups.getGroups().keySet()) {
                         if (PermissionChecker.hasPermission(killer, "moneythief.group." + group)) {
                             worth = worth * Config.Groups.getGroups().get(group).get(0);
-                            plugin.getLogger().info("Multiplying worth according to " +
-                                    group + " (" + Config.Groups.getGroups().get(group).get(0) + ")");
+                            //plugin.getLogger().info("Multiplying worth according to " +
+                            //        group + " (" + Config.Groups.getGroups().get(group).get(0) + ")");
                         }
                     }
                     if (worth != 0) {

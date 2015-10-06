@@ -209,7 +209,7 @@ public class Config {
             for (String name : mobSection.getKeys(false)) {
                 List<Double> values = mobSection.getDoubleList(name);
                 temp.put(name, values);
-                plugin.getLogger().info("Adding " + name + " to mob list");
+                //plugin.getLogger().info("Adding " + name + " to mob list");
             }
         }
         Mobs.mobs = (HashMap<String, List<Double>>) temp.clone();
@@ -220,7 +220,7 @@ public class Config {
             for (String name : groupSection.getKeys(false)) {
                 List<Double> values = groupSection.getDoubleList(name);
                 temp.put(name, values);
-                plugin.getLogger().info("Adding " + name + " to group list");
+                //plugin.getLogger().info("Adding " + name + " to group list");
             }
         }
         Groups.groups = (HashMap<String, List<Double>>) temp.clone();

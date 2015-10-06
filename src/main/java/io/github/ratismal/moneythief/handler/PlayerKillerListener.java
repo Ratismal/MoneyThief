@@ -5,6 +5,7 @@ import io.github.ratismal.moneythief.util.FanfarePlayer;
 import io.github.ratismal.moneythief.MoneyThief;
 import io.github.ratismal.moneythief.util.KillLogger;
 import io.github.ratismal.moneythief.util.MessageProcessor;
+import io.github.ratismal.moneythief.util.PermissionChecker;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -177,11 +178,22 @@ public class PlayerKillerListener implements Listener {
 
             double balKilled = econ.getBalance(killed);
             double moneyLost = balKilled * (lost / 100);
+            for (String group : Config.Groups.getGroups().keySet()) {
+                if (PermissionChecker.hasPermission(killed, "moneythief.group." + group)) {
+                    if (Config.Groups.getGroups().get(group).size() > 1) {
+                        moneyLost = moneyLost * Config.Groups.getGroups().get(group).get(1);
+                        //plugin.getLogger().info("Multiplying worth according to " +
+                        //        group + " (" + Config.Groups.getGroups().get(group).get(1) + ")");
+                    }
+                }
+            }
             moneyLost = Math.round(moneyLost * 100);
             moneyLost = moneyLost / 100;
             int major = (int) moneyLost;
             int minor = (int) ((moneyLost - major) * 100);
             //System.out.println(major + " " + minor);
+
+
 
             String toVictim = MessageProcessor.processMobPVE(Config.Message.getPveVictimMob(), entity, moneyLost, major, minor, prefix);
 
@@ -239,11 +251,25 @@ public class PlayerKillerListener implements Listener {
 
             double balKilled = econ.getBalance(killed);
             double moneyLost = balKilled * (lost / 100);
+            for (String group : Config.Groups.getGroups().keySet()) {
+                if (PermissionChecker.hasPermission(killed, "moneythief.group." + group)) {
+                    if (Config.Groups.getGroups().get(group).size() > 1) {
+                        //plugin.getLogger().info(moneyLost + "");
+                        moneyLost = moneyLost * Config.Groups.getGroups().get(group).get(1);
+                        //plugin.getLogger().info("Multiplying worth according to " +
+                        //        group + " (" + Config.Groups.getGroups().get(group).get(1) + ")");
+                       // plugin.getLogger().info(moneyLost + "");
+                    }
+                }
+            }
             moneyLost = Math.round(moneyLost * 100);
             moneyLost = moneyLost / 100;
+            //plugin.getLogger().info(moneyLost + "");
             int major = (int) moneyLost;
             int minor = (int) ((moneyLost - major) * 100);
             //System.out.println(major + " " + minor);
+
+
 
             String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnv(), cause, moneyLost, major, minor);
 
