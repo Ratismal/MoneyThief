@@ -12,7 +12,8 @@ public class PermissionChecker {
 
     /**
      * Checks if player has permission node, not including OP permissions
-     * @param player player
+     *
+     * @param player     player
      * @param permission Permission in question
      * @return true if they have the permission
      */

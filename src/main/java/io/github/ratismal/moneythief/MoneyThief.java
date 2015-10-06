@@ -34,105 +34,104 @@ public class MoneyThief extends JavaPlugin {
 
     private Config pluginconfig;
 
-	private String newVersionTitle = "";
-	private double newVersion = 0;
-	private double currentVersion = 0;
-	private String currentVersionTitle = "";
+    private String newVersionTitle = "";
+    private double newVersion = 0;
+    private double currentVersion = 0;
+    private String currentVersionTitle = "";
 
-	public static MoneyThief plugin;
-	public Logger log = getLogger();
-	public Economy econ = null;
+    public static MoneyThief plugin;
+    public Logger log = getLogger();
+    public Economy econ = null;
 
-	public File songOneData = null;
-	public FileConfiguration song1 = null;
-	public File songTwoData = null;
-	public FileConfiguration song2 = null;
-	public File songThreeData = null;
-	public FileConfiguration song3 = null;
+    public File songOneData = null;
+    public FileConfiguration song1 = null;
+    public File songTwoData = null;
+    public FileConfiguration song2 = null;
+    public File songThreeData = null;
+    public FileConfiguration song3 = null;
 
     /**
      * Called when plugin is enabled
      */
-	@Override
-	public void onEnable() {
+    @Override
+    public void onEnable() {
 
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Plugin by Ratismal");
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Check for updates at: ");
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief]" + ChatColor.AQUA + " http://dev.bukkit.org/bukkit-plugins/moneythief/");
-		plugin = this;
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Plugin by Ratismal");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Check for updates at: ");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief]" + ChatColor.AQUA + " http://dev.bukkit.org/bukkit-plugins/moneythief/");
+        plugin = this;
 
-		PluginManager pm = this.getServer().getPluginManager();
+        PluginManager pm = this.getServer().getPluginManager();
 
-		this.saveDefaultSongs();
-		this.saveDefaultConfig();
-		getConfig();
-		getSongOne();
-		getSongTwo();
-		getSongThree();
+        this.saveDefaultSongs();
+        this.saveDefaultConfig();
+        getConfig();
+        getSongOne();
+        getSongTwo();
+        getSongThree();
 
-		this.pluginconfig = new Config(this, getConfig());
+        this.pluginconfig = new Config(this, getConfig());
 
-		if (!setupEconomy() ) {
-			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-			getServer().getPluginManager().disablePlugin(this);
-			return;
-		}
-		else {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief]" + ChatColor.YELLOW + " Hooked onto Vault!");
-		}
-		pm.registerEvents(new PlayerKillerListener(this), this);
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Player Listener Enabled");
-		pm.registerEvents(new EntityKillerListener(this), this);
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Entity Listener Enabled");
+        if (!setupEconomy()) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        } else {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief]" + ChatColor.YELLOW + " Hooked onto Vault!");
+        }
+        pm.registerEvents(new PlayerKillerListener(this), this);
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Player Listener Enabled");
+        pm.registerEvents(new EntityKillerListener(this), this);
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Entity Listener Enabled");
 
-		currentVersionTitle = getDescription().getVersion().split("-")[0];
+        currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.valueOf(currentVersionTitle.replaceFirst("\\.", ""));
 
-		if (getConfig().getBoolean("metrics")) {
-			try {
-				Metrics metrics = new Metrics(this);
-				metrics.start();
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics started");
-			} catch (IOException e) {
-				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics failed to start");
-			}
-		}
+        if (getConfig().getBoolean("metrics")) {
+            try {
+                Metrics metrics = new Metrics(this);
+                metrics.start();
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics started");
+            } catch (IOException e) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[MoneyThief] Metrics failed to start");
+            }
+        }
 
         /**
          * Initiate update checker
          */
-		this.getServer().getScheduler().runTask(this, new Runnable() {
+        this.getServer().getScheduler().runTask(this, new Runnable() {
 
-			@Override
-			public void run() {
-				getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
-					@Override
-					public void run() {
-						if (getServer().getConsoleSender().hasPermission("moneythief.update") && getConfig().getBoolean("update-check", true)) {
-							try {
-								log.info("Running update checker...");
-								newVersion = updateCheck(currentVersion);
-								if (newVersion > currentVersion) {
-									log.warning("Version " + newVersionTitle + " has been released." + " You are currently running version " + currentVersionTitle);
-									log.warning("Update at: http://dev.bukkit.org/bukkit-plugins/moneythief/");
-								} else if (currentVersion > newVersion) {
-									log.info("You are running an unsupported build!");
-									log.info("The recommended version is " + newVersionTitle + ", and you are running " + currentVersionTitle);
-									log.info("If the plugin has just recently updated, please ignore this message.");
-								} else {
-									log.info("Hooray! You are running the latest build!");
-								}
-							} catch (Exception e) {
-								// ignore exceptions
-							}
-						}
-					}
-				}, 0, 430000);
+                    @Override
+                    public void run() {
+                        if (getServer().getConsoleSender().hasPermission("moneythief.update") && getConfig().getBoolean("update-check", true)) {
+                            try {
+                                log.info("Running update checker...");
+                                newVersion = updateCheck(currentVersion);
+                                if (newVersion > currentVersion) {
+                                    log.warning("Version " + newVersionTitle + " has been released." + " You are currently running version " + currentVersionTitle);
+                                    log.warning("Update at: http://dev.bukkit.org/bukkit-plugins/moneythief/");
+                                } else if (currentVersion > newVersion) {
+                                    log.info("You are running an unsupported build!");
+                                    log.info("The recommended version is " + newVersionTitle + ", and you are running " + currentVersionTitle);
+                                    log.info("If the plugin has just recently updated, please ignore this message.");
+                                } else {
+                                    log.info("Hooray! You are running the latest build!");
+                                }
+                            } catch (Exception e) {
+                                // ignore exceptions
+                            }
+                        }
+                    }
+                }, 0, 430000);
 
-			}
+            }
 
-		});
+        });
         /*
         Add commands
          */
@@ -142,42 +141,43 @@ public class MoneyThief extends JavaPlugin {
     /**
      * Called when plugin is disabled
      */
-	@Override
-	public void onDisable() {
-		getServer().getServicesManager().unregisterAll(this);
-		Bukkit.getScheduler().cancelTasks(this);
+    @Override
+    public void onDisable() {
+        getServer().getServicesManager().unregisterAll(this);
+        Bukkit.getScheduler().cancelTasks(this);
         getLogger().info("Plugin has been disabled!");
-	}
+    }
 
     /**
      * Sets up vault economy
+     *
      * @return true if economy is initialized
      */
-	private boolean setupEconomy() {
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
-			return false;
-		}
-		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
-			return false;
-		}
-		econ = rsp.getProvider();
-		return econ != null;
-	}
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 
     /**
      * Load/reload songs, or create if they don't exist
      */
-	public void reloadSongs() {
-		if (songOneData == null) {
-			songOneData = new File(getDataFolder(), "songs/songOne.yml");
-		}
-		song1 = YamlConfiguration.loadConfiguration(songOneData);
-		Reader defConfigStream1 = new InputStreamReader(this.getResource("songs/songOne.yml"));
-		if (defConfigStream1 != null) {
-			YamlConfiguration defConfig1 = YamlConfiguration.loadConfiguration(defConfigStream1);
-			song1.setDefaults(defConfig1);
-		}
+    public void reloadSongs() {
+        if (songOneData == null) {
+            songOneData = new File(getDataFolder(), "songs/songOne.yml");
+        }
+        song1 = YamlConfiguration.loadConfiguration(songOneData);
+        Reader defConfigStream1 = new InputStreamReader(this.getResource("songs/songOne.yml"));
+        if (defConfigStream1 != null) {
+            YamlConfiguration defConfig1 = YamlConfiguration.loadConfiguration(defConfigStream1);
+            song1.setDefaults(defConfig1);
+        }
 
         if (songTwoData == null) {
             songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
@@ -200,13 +200,14 @@ public class MoneyThief extends JavaPlugin {
             YamlConfiguration defConfig3 = YamlConfiguration.loadConfiguration(defConfigStream3);
             song3.setDefaults(defConfig3);
         }
-	}
+    }
 
     /**
      * Get song one
+     *
      * @return song1
      */
-	public FileConfiguration getSongOne() {
+    public FileConfiguration getSongOne() {
         if (song1 == null) {
             reloadSongs();
         }
@@ -215,36 +216,38 @@ public class MoneyThief extends JavaPlugin {
 
     /**
      * Get song two
+     *
      * @return song2
      */
-	public FileConfiguration getSongTwo() {
-		if (song2 == null) {
-			reloadSongs();
-		}
-		return song2;
-	}
+    public FileConfiguration getSongTwo() {
+        if (song2 == null) {
+            reloadSongs();
+        }
+        return song2;
+    }
 
     /**
      * Get song three
+     *
      * @return song3
      */
-	public FileConfiguration getSongThree() {
-		if (song3 == null) {
-			reloadSongs();
-		}
-		return song3;
-	}
+    public FileConfiguration getSongThree() {
+        if (song3 == null) {
+            reloadSongs();
+        }
+        return song3;
+    }
 
     /**
      * Saves default songs, or creates if they don't exist
      */
-	public void saveDefaultSongs() {
-		if (songOneData == null) {
-			songOneData = new File(getDataFolder(), "songs/songOne.yml");
-		}
-		if (!songOneData.exists()) {
-			plugin.saveResource("songs/songOne.yml", false);
-		}
+    public void saveDefaultSongs() {
+        if (songOneData == null) {
+            songOneData = new File(getDataFolder(), "songs/songOne.yml");
+        }
+        if (!songOneData.exists()) {
+            plugin.saveResource("songs/songOne.yml", false);
+        }
 
         if (songTwoData == null) {
             songTwoData = new File(getDataFolder(), "songs/songTwo.yml");
@@ -259,36 +262,37 @@ public class MoneyThief extends JavaPlugin {
         if (!songThreeData.exists()) {
             plugin.saveResource("songs/songThree.yml", false);
         }
-	}
+    }
 
     /**
      * Checks if there is an available update (Adapted from Vault's update checker)
+     *
      * @param currentVersion Current plugin version
      * @return Latest version
      */
-	public double updateCheck(double currentVersion) {
-		try {
-			URL url = new URL("https://api.curseforge.com/servermods/files?projectids=89728");
-			URLConnection conn = url.openConnection();
-			conn.setReadTimeout(5000);
-			conn.addRequestProperty("User-Agent", "MoneyThief Update Checker");
-			conn.setDoOutput(true);
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			final String response = reader.readLine();
-			final JSONArray array = (JSONArray) JSONValue.parse(response);
+    public double updateCheck(double currentVersion) {
+        try {
+            URL url = new URL("https://api.curseforge.com/servermods/files?projectids=89728");
+            URLConnection conn = url.openConnection();
+            conn.setReadTimeout(5000);
+            conn.addRequestProperty("User-Agent", "MoneyThief Update Checker");
+            conn.setDoOutput(true);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            final String response = reader.readLine();
+            final JSONArray array = (JSONArray) JSONValue.parse(response);
 
-			if (array.size() == 0) {
-				this.getLogger().warning("No files found, or Feed URL is bad.");
-				return currentVersion;
-			}
-			// Pull the last version from the JSON
-			newVersionTitle = ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("MoneyThief-", "").trim();
-			return Double.valueOf(newVersionTitle.replaceFirst("\\.", "").trim());
-		} catch (Exception e) {
-			log.info("There was an issue attempting to check for the latest version.");
-		}
-		return currentVersion;
-	}
+            if (array.size() == 0) {
+                this.getLogger().warning("No files found, or Feed URL is bad.");
+                return currentVersion;
+            }
+            // Pull the last version from the JSON
+            newVersionTitle = ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("MoneyThief-", "").trim();
+            return Double.valueOf(newVersionTitle.replaceFirst("\\.", "").trim());
+        } catch (Exception e) {
+            log.info("There was an issue attempting to check for the latest version.");
+        }
+        return currentVersion;
+    }
 
 
 }

@@ -27,6 +27,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * PlayerKillerListener construct
+     *
      * @param instance MoneyThief plugin
      */
     public PlayerKillerListener(MoneyThief instance) {
@@ -36,6 +37,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Rewards or penalizes a player for dying/killing another player
+     *
      * @param event PlayerDeathEvent
      */
     @EventHandler
@@ -72,6 +74,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Event is pvp, reward killer and penalize killed
+     *
      * @param event PlayerDeathEvent
      */
     private void pvp(PlayerDeathEvent event) {
@@ -165,8 +168,9 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Player was killed by a mob, penalize
+     *
      * @param event PlayerDeathEvent
-     * @param lost Percent of balance player loses
+     * @param lost  Percent of balance player loses
      */
     public void pveMob(PlayerDeathEvent event, double lost) {
         Entity killer = getCausedEntity(event);
@@ -237,8 +241,9 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Player died from environment, penalize
+     *
      * @param event PlayerDeathEvent
-     * @param lost Percent of balance player loses
+     * @param lost  Percent of balance player loses
      */
     public void pveEnv(PlayerDeathEvent event, double lost) {
         EntityDamageEvent.DamageCause damageCause = getCause(event);
@@ -291,6 +296,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Get the entity that caused the death
+     *
      * @param event EntityDeathEvent
      * @return Murdering entity
      */
@@ -305,6 +311,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Checks if player was killed by a mob or environment
+     *
      * @param event PlayerDeathEvent
      * @return true if killed by mob
      */
@@ -315,6 +322,7 @@ public class PlayerKillerListener implements Listener {
 
     /**
      * Get what killed player (non-mob)
+     *
      * @param event PlayerDeathEvent
      * @return Cause of death
      */

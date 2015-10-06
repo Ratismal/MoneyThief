@@ -185,6 +185,7 @@ public class Config {
 
     /**
      * Config constructor
+     *
      * @param plugin MoneyThief plugin
      * @param config Config
      */
@@ -196,6 +197,7 @@ public class Config {
 
     /**
      * Reloads the config
+     *
      * @param config
      */
     public void reload(FileConfiguration config) {

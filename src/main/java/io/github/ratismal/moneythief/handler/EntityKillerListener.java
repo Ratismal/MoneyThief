@@ -28,6 +28,7 @@ public class EntityKillerListener implements Listener {
 
     /**
      * EntityKillerListener constructor
+     *
      * @param instance MoneyThief plugin
      */
     public EntityKillerListener(MoneyThief instance) {
@@ -41,6 +42,7 @@ public class EntityKillerListener implements Listener {
     /**
      * Determines if a mob has been spawned in artificially,
      * and if it has been put it in the spawnedNotNatural list
+     *
      * @param event CreatureSpawnEvent
      */
     @EventHandler
@@ -54,6 +56,7 @@ public class EntityKillerListener implements Listener {
 
     /**
      * Reward player for killing a mob
+     *
      * @param event EntityDeathEvent
      */
     @EventHandler
@@ -112,6 +115,7 @@ public class EntityKillerListener implements Listener {
 
     /**
      * Searches Config.Mobs.mobs for a mob
+     *
      * @param mob mob to search for
      * @return the mob's worth
      */

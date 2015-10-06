@@ -21,6 +21,7 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * CommandHandler constructor
+     *
      * @param plugin MoneyThief plugin
      * @param config config
      */
@@ -83,8 +84,9 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Check if sender has permissions to do command
+     *
      * @param sender player who did command
-     * @param perm permission to check
+     * @param perm   permission to check
      * @return true if they have permission
      */
     boolean hasPerm(CommandSender sender, String perm) {
@@ -97,6 +99,7 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Sends help message to player
+     *
      * @param sender player
      */
     void help(CommandSender sender) {
@@ -110,6 +113,7 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Tells player plugin version
+     *
      * @param sender player
      */
     void version(CommandSender sender) {
@@ -118,14 +122,15 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Tells player a list of all mobs in config, and how much they're worth
+     *
      * @param sender player
      */
     void worth(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob Values:");
-        for (String key : Config.Mobs.getMobs().keySet()){
+        for (String key : Config.Mobs.getMobs().keySet()) {
             List<Double> list = Config.Mobs.getMobs().get(key);
             String message = key;
-            for (int i=0; i <= list.size() - 1; i++) {
+            for (int i = 0; i <= list.size() - 1; i++) {
                 if (i == 0) {
                     message = message + ": ";
                 } else {
@@ -139,14 +144,15 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Tells the player a list of all groups in config, and their values
+     *
      * @param sender player
      */
     void groups(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group Values:");
-        for (String key : Config.Groups.getGroups().keySet()){
+        for (String key : Config.Groups.getGroups().keySet()) {
             List<Double> list = Config.Groups.getGroups().get(key);
             String message = key;
-            for (int i=0; i <= list.size() - 1; i++) {
+            for (int i = 0; i <= list.size() - 1; i++) {
                 if (i == 0) {
                     message = message + ": ";
                 } else {
@@ -160,8 +166,9 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Tell the player how much a specific mob is worth
+     *
      * @param sender player
-     * @param mob mob
+     * @param mob    mob
      */
     public void searchMobs(CommandSender sender, String mob) {
         String msg;
@@ -170,7 +177,7 @@ public class CommandHandler implements CommandExecutor {
             sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob Values [" + mob + "]:");
             msg = ChatColor.LIGHT_PURPLE + "  " + mob;
             List<Double> list = Config.Mobs.getMobs().get(mob);
-            for (int i=0; i <= list.size() - 1; i++) {
+            for (int i = 0; i <= list.size() - 1; i++) {
                 if (i == 0) {
                     msg = msg + ": ";
                 } else {
@@ -180,15 +187,16 @@ public class CommandHandler implements CommandExecutor {
                 //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
             }
         } else {
-            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE +  "Mob '" + mob + "' does not exist in config!";
+            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob '" + mob + "' does not exist in config!";
         }
         sender.sendMessage(msg);
     }
 
     /**
      * Tells a player the values for a specific group
+     *
      * @param sender player
-     * @param group group
+     * @param group  group
      */
     public void searchGroups(CommandSender sender, String group) {
         String msg;
@@ -196,9 +204,9 @@ public class CommandHandler implements CommandExecutor {
         if (Config.Groups.getGroups().containsKey(group)) {
             sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group Values [" + group + "]:");
 
-            msg = ChatColor.LIGHT_PURPLE + "  " +  group;
+            msg = ChatColor.LIGHT_PURPLE + "  " + group;
             List<Double> list = Config.Groups.getGroups().get(group);
-            for (int i=0; i <= list.size() - 1; i++) {
+            for (int i = 0; i <= list.size() - 1; i++) {
                 if (i == 0) {
                     msg = msg + ": ";
                 } else {
@@ -208,7 +216,7 @@ public class CommandHandler implements CommandExecutor {
                 //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
             }
         } else {
-            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE +  "Group '" + group + "' does not exist in config!";
+            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group '" + group + "' does not exist in config!";
 
         }
         sender.sendMessage(msg);
@@ -216,6 +224,7 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Tells the player they don't have permissions to do a command
+     *
      * @param sender player
      */
     public void noPerms(CommandSender sender) {
@@ -226,6 +235,7 @@ public class CommandHandler implements CommandExecutor {
 
     /**
      * Reloads the configs, and tells the player it has been reloaded
+     *
      * @param sender player
      */
     public void reloadConfig(CommandSender sender) {
