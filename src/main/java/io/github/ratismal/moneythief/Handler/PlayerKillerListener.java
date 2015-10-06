@@ -4,7 +4,7 @@ import io.github.ratismal.moneythief.config.Config;
 import io.github.ratismal.moneythief.util.FanfarePlayer;
 import io.github.ratismal.moneythief.MoneyThief;
 import io.github.ratismal.moneythief.util.KillLogger;
-import io.github.ratismal.moneythief.util.ProcessMessage;
+import io.github.ratismal.moneythief.util.MessageProcessor;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -97,11 +97,11 @@ public class PlayerKillerListener implements Listener {
                 int majorLost = (int) moneyLost;
                 int minorLost = (int) ((moneyLost - majorLost) * 100);
 
-                String toKiller = ProcessMessage.processPVP(Config.Message.getPvpKiller(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+                String toKiller = MessageProcessor.processPVP(Config.Message.getPvpKiller(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
                         minorGiven, majorTaken, minorTaken, majorLost, minorLost);
-                String toVictim = ProcessMessage.processPVP(Config.Message.getPvpVictim(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+                String toVictim = MessageProcessor.processPVP(Config.Message.getPvpVictim(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
                         minorGiven, majorTaken, minorTaken, majorLost, minorLost);
-                String pvpMessage = ProcessMessage.processPVP(Config.Message.getPvpDeathMessage(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
+                String pvpMessage = MessageProcessor.processPVP(Config.Message.getPvpDeathMessage(), killedName, moneyGiven, taken, moneyLost, killerName, majorGiven,
                         minorGiven, majorTaken, minorTaken, majorLost, minorLost);
 
                 if (!(toVictim.equalsIgnoreCase("none"))) {
@@ -133,8 +133,8 @@ public class PlayerKillerListener implements Listener {
                 String killedName = killed.getDisplayName();
                 String killerName = killer.getDisplayName();
 
-                String toKillerZero = ProcessMessage.processPVP(Config.Message.getPvpKillerZero(), killedName, killerName);
-                String toVictimZero = ProcessMessage.processPVP(Config.Message.getPvpVictimZero(), killedName, killerName);
+                String toKillerZero = MessageProcessor.processPVP(Config.Message.getPvpKillerZero(), killedName, killerName);
+                String toVictimZero = MessageProcessor.processPVP(Config.Message.getPvpVictimZero(), killedName, killerName);
                 toKillerZero = ChatColor.translateAlternateColorCodes('&', toKillerZero);
                 toVictimZero = ChatColor.translateAlternateColorCodes('&', toVictimZero);
                 if (!(toVictimZero.equalsIgnoreCase("none"))) {
@@ -183,12 +183,12 @@ public class PlayerKillerListener implements Listener {
             int minor = (int) ((moneyLost - major) * 100);
             //System.out.println(major + " " + minor);
 
-            String toVictim = ProcessMessage.processMobPVE(Config.Message.getPveVictimMob(), entity, moneyLost, major, minor, prefix);
+            String toVictim = MessageProcessor.processMobPVE(Config.Message.getPveVictimMob(), entity, moneyLost, major, minor, prefix);
 
             if (!(toVictim.equalsIgnoreCase("none"))) {
                 killed.sendMessage(toVictim); //Message sent to victim upon
             }
-            String pveMessage = ProcessMessage.processMobPVE(Config.Message.getPveDeathMessage(), entity, moneyLost, major, minor, prefix);
+            String pveMessage = MessageProcessor.processMobPVE(Config.Message.getPveDeathMessage(), entity, moneyLost, major, minor, prefix);
             if (!(pveMessage.equalsIgnoreCase("none"))) {
                 if (pveMessage.equalsIgnoreCase("disable")) {
                     event.setDeathMessage(null);
@@ -215,7 +215,7 @@ public class PlayerKillerListener implements Listener {
             } else {
                 prefix = "a";
             }
-            String toVictimZero = ProcessMessage.processMobPVE(Config.Message.getPveVictimMobZero(), entity, prefix);
+            String toVictimZero = MessageProcessor.processMobPVE(Config.Message.getPveVictimMobZero(), entity, prefix);
             if (!(toVictimZero.equalsIgnoreCase("none"))) {
                 killed.sendMessage(toVictimZero);
             }
@@ -245,7 +245,7 @@ public class PlayerKillerListener implements Listener {
             int minor = (int) ((moneyLost - major) * 100);
             //System.out.println(major + " " + minor);
 
-            String toVictim = ProcessMessage.processEnvPVE(Config.Message.getPveVictimEnv(), cause, moneyLost, major, minor);
+            String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnv(), cause, moneyLost, major, minor);
 
             econ.withdrawPlayer(killed, moneyLost);
             //econ.
@@ -256,7 +256,7 @@ public class PlayerKillerListener implements Listener {
             music.songThree(killed);
 
         } else {
-            String toVictim = ProcessMessage.processEnvPVE(Config.Message.getPveVictimEnv(), cause);
+            String toVictim = MessageProcessor.processEnvPVE(Config.Message.getPveVictimEnv(), cause);
 
             if (!(toVictim.equalsIgnoreCase("none"))) {
                 killed.sendMessage(toVictim); //Message sent to victim upon

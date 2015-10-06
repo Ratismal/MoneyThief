@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +15,10 @@ import io.github.ratismal.moneythief.handler.EntityKillerListener;
 import io.github.ratismal.moneythief.handler.PlayerKillerListener;
 import io.github.ratismal.moneythief.config.Config;
 import io.github.ratismal.moneythief.util.FanfarePlayer;
-import io.github.ratismal.moneythief.util.ProcessMessage;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.PermissionDefault;

@@ -8,7 +8,8 @@ import io.github.ratismal.moneythief.config.Config;
 import io.github.ratismal.moneythief.util.FanfarePlayer;
 import io.github.ratismal.moneythief.MoneyThief;
 import io.github.ratismal.moneythief.util.KillLogger;
-import io.github.ratismal.moneythief.util.ProcessMessage;
+import io.github.ratismal.moneythief.util.MessageProcessor;
+import io.github.ratismal.moneythief.util.PermissionChecker;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -45,6 +46,7 @@ public class EntityKillerListener implements Listener {
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         //spawnedNotNatural.containsKey()
+
         if (Config.PVE.isArtificialSpawn() || !spawnedNotNatural.containsKey(event.getEntity().getEntityId())) {
             //config.getBoolean("artificial-spawn", true) ||
             if ((Bukkit.getOnlinePlayers().contains(event.getEntity().getKiller())) && (event.getEntity().getKiller().hasPermission("moneythief.PVE"))) {
@@ -56,6 +58,13 @@ public class EntityKillerListener implements Listener {
                     final Player killer = event.getEntity().getKiller();
 
                     Double worth = searchConfig(entity);
+                    for (String group : Config.Groups.getGroups().keySet()) {
+                        if (PermissionChecker.hasPermission(killer, "moneythief.group." + group)) {
+                            worth = worth * Config.Groups.getGroups().get(group).get(0);
+                            plugin.getLogger().info("Multiplying worth according to " +
+                                    group + " (" + Config.Groups.getGroups().get(group).get(0) + ")");
+                        }
+                    }
                     if (worth != 0) {
                         double money = worth;
                         econ.depositPlayer(killer, money);
@@ -77,7 +86,7 @@ public class EntityKillerListener implements Listener {
                             int minor = (int) ((money - major) * 100);
                             entity = entity.replaceAll("_", " ");
 
-                            String toKiller = ProcessMessage.processMobPVE(Config.Message.getPveKiller(), entity, money, major, minor, prefix);
+                            String toKiller = MessageProcessor.processMobPVE(Config.Message.getPveKiller(), entity, money, major, minor, prefix);
 
                             killer.sendMessage(toKiller);
 
@@ -95,16 +104,32 @@ public class EntityKillerListener implements Listener {
 
     public double searchConfig(String mob) {
         Double worth = 0.0;
+        HashMap<String, List<Double>> list = Config.Mobs.getMobs();
         try {
-            List<Double> mobWorth = plugin.getConfig().getDoubleList("mobs." + mob);
-            Double low = mobWorth.get(0);
-            Double high = mobWorth.get(1);
-            Random r = new Random();
-            worth = low + (high - low) * r.nextDouble();
-        } catch (Exception e) {
-            if ( Config.General.isNotifyMissingMob())
+            if (list.containsKey(mob)) {
+                List<Double> mobWorth = Config.Mobs.getMobs().get(mob);
+                Double low = mobWorth.get(0);
+                Double high = mobWorth.get(1);
+                Random r = new Random();
+                worth = low + (high - low) * r.nextDouble();
+            } else if (Config.Mobs.getMobs().containsKey("DEFAULT")) {
+                List<Double> mobWorth = Config.Mobs.getMobs().get("DEFAULT");
+                Double low = mobWorth.get(0);
+                Double high = mobWorth.get(1);
+                Random r = new Random();
+                worth = low + (high - low) * r.nextDouble();
+                if (Config.General.isNotifyMissingMob()) {
+                    plugin.getLogger().info("Using default values for mob " + mob);
+                }
+            } else if (Config.General.isNotifyMissingMob()) {
                 plugin.getLogger().warning("Mob " + mob + " does not exist in MoneyThief config, or was added incorrectly. Please revise!");
+            }
+        } catch (Exception e) {
+            if (Config.General.isNotifyMissingMob()) {
+                plugin.getLogger().warning("Mob " + mob + " does not exist in MoneyThief config, or was added incorrectly. Please revise!");
+            }
         }
+
         return worth;
     }
 }

@@ -2,7 +2,7 @@ package io.github.ratismal.moneythief.handler;
 
 import io.github.ratismal.moneythief.MoneyThief;
 import io.github.ratismal.moneythief.config.Config;
-import io.github.ratismal.moneythief.util.ProcessMessage;
+import io.github.ratismal.moneythief.util.MessageProcessor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,62 +34,158 @@ public class CommandHandler implements CommandExecutor {
      * @return True if successful
      */
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
-        if ((cmd.getName().equalsIgnoreCase("moneythief")) && ((args.length == 0) || ((args.length == 1)
-                && (args[0] == "help"))) && (sender.hasPermission("moneythief"))) {
-            sender.sendMessage(ChatColor.GOLD + "|=======MoneyThief=======|");
-            sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief" + ChatColor.GOLD + " - Display this menu");
-            sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief reloadconfig" + ChatColor.GOLD + " - Reload configs");
-            sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief worth" + ChatColor.GOLD + " - Display the worth of lives");
-            sender.sendMessage(ChatColor.DARK_PURPLE + "/moneythief v" + ChatColor.GOLD + " - Displays plugin version");
-            return true;
-        }
-        else if ((sender.hasPermission("moneythief") == false)) {
-            noPerms(sender);
-            return true;
-        }
-        if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("v"))) {
-            sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.DARK_PURPLE + " is running on version " + plugin.getDescription().getVersion());
-            return true;
-        }
-
-        if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("reloadconfig"))
-                && (args.length == 1) && (sender.hasPermission("moneythief.reloadConfig"))) {
-            reloadConfig();
-            sender.sendMessage(ChatColor.GOLD + "Configs reloaded!");
-            return true;
-        }
-        else if ((sender.hasPermission("moneythief.reloadConfig") == false)) {
-            noPerms(sender);
-            return true;
-        }
-        if ((cmd.getName().equalsIgnoreCase("moneythief")) && (args[0].equalsIgnoreCase("worth"))
-                && (args.length == 1) && (sender.hasPermission("moneythief.worth"))) {
-            for (String key : Config.Mobs.getMobs().keySet()){
-                List<Double> list = Config.Mobs.getMobs().get(key);
-                sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
+        if (cmd.getName().equalsIgnoreCase("moneythief")) {
+            if (args.length > 0) {
+                switch (args[0].toLowerCase()) {
+                    case "v":
+                        version(sender);
+                        break;
+                    case "worth":
+                        if (hasPerm(sender, "moneythief.worth")) {
+                            if (args.length > 1) {
+                                searchMobs(sender, args[1]);
+                            } else {
+                                worth(sender);
+                            }
+                        }
+                        break;
+                    case "group":
+                        if (hasPerm(sender, "moneythief.group")) {
+                            if (args.length > 1) {
+                                searchGroups(sender, args[1]);
+                            } else {
+                                groups(sender);
+                            }
+                        }
+                        break;
+                    case "reloadconfig":
+                        if (hasPerm(sender, "moneythief.reloadConfig")) {
+                            reloadConfig(sender);
+                        }
+                        break;
+                    default:
+                        help(sender);
+                        break;
+                }
+                return true;
+            } else {
+                help(sender);
+                return true;
             }
-            return true;
-        }
-        else if ((sender.hasPermission("moneythief.worth") == false)) {
-            noPerms(sender);
-            return true;
         }
         return false;
     }
 
-    public String searchConfig(String mob) {
-        String worth = "" + Config.Mobs.getMobs().get(mob);
-        return worth;
+    boolean hasPerm(CommandSender sender, String perm) {
+        if (!sender.hasPermission(perm)) {
+            noPerms(sender);
+            return false;
+        }
+        return true;
+    }
+
+    void help(CommandSender sender) {
+        sender.sendMessage(ChatColor.GOLD + "|=======MoneyThief=======|");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief" + ChatColor.GOLD + " - Display this menu");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief reloadconfig" + ChatColor.GOLD + " - Reload configs");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief worth [mob]" + ChatColor.GOLD + " - Display the worth of lives");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief group [group]" + ChatColor.GOLD + " - Displays group values");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief v" + ChatColor.GOLD + " - Displays plugin version");
+    }
+
+    void version(CommandSender sender) {
+        sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.LIGHT_PURPLE + " is running on version " + plugin.getDescription().getVersion());
+    }
+
+    void worth(CommandSender sender) {
+        sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob Values:");
+        for (String key : Config.Mobs.getMobs().keySet()){
+            List<Double> list = Config.Mobs.getMobs().get(key);
+            String message = key;
+            for (int i=0; i <= list.size() - 1; i++) {
+                if (i == 0) {
+                    message = message + ": ";
+                } else {
+                    message = message + " - ";
+                }
+                message = message + list.get(i);
+                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
+            }
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "  " + message);
+        }
+    }
+
+    void groups(CommandSender sender) {
+        sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group Values:");
+        for (String key : Config.Groups.getGroups().keySet()){
+            List<Double> list = Config.Groups.getGroups().get(key);
+            String message = key;
+            for (int i=0; i <= list.size() - 1; i++) {
+                if (i == 0) {
+                    message = message + ": ";
+                } else {
+                    message = message + " - ";
+                }
+                message = message + list.get(i);
+                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
+            }
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "  " + message);
+        }
+    }
+
+    public void searchMobs(CommandSender sender, String mob) {
+        String msg;
+
+        if (Config.Mobs.getMobs().containsKey(mob)) {
+            sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Mob Values [" + mob + "]:");
+            msg = ChatColor.LIGHT_PURPLE + "  " + mob;
+            List<Double> list = Config.Mobs.getMobs().get(mob);
+            for (int i=0; i <= list.size() - 1; i++) {
+                if (i == 0) {
+                    msg = msg + ": ";
+                } else {
+                    msg = msg + " - ";
+                }
+                msg = msg + list.get(i);
+                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
+            }
+        } else {
+            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE +  "Mob '" + mob + "' does not exist in config!";
+        }
+        sender.sendMessage(msg);
+    }
+
+    public void searchGroups(CommandSender sender, String group) {
+        String msg;
+
+        if (Config.Groups.getGroups().containsKey(group)) {
+            sender.sendMessage(ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE + "Group Values [" + group + "]:");
+
+            msg = ChatColor.LIGHT_PURPLE + "  " +  group;
+            List<Double> list = Config.Groups.getGroups().get(group);
+            for (int i=0; i <= list.size() - 1; i++) {
+                if (i == 0) {
+                    msg = msg + ": ";
+                } else {
+                    msg = msg + " - ";
+                }
+                msg = msg + list.get(i);
+                //sender.sendMessage(key + ": " + list.get(0) + " - " + list.get(1));
+            }
+        } else {
+            msg = ChatColor.GOLD + "[MoneyThief] " + ChatColor.LIGHT_PURPLE +  "Group '" + group + "' does not exist in config!";
+
+        }
+        sender.sendMessage(msg);
     }
 
     public void noPerms(CommandSender sender) {
         String noPerms = Config.Message.getNoPerms();
-        noPerms = ProcessMessage.processGeneral(noPerms);
+        noPerms = MessageProcessor.processGeneral(noPerms);
         sender.sendMessage(noPerms);
     }
 
-    public void reloadConfig() {
+    public void reloadConfig(CommandSender sender) {
         plugin.reloadConfig();
         plugin.reloadSongOne();
         plugin.reloadSongTwo();
@@ -100,6 +196,7 @@ public class CommandHandler implements CommandExecutor {
         plugin.getSongThree();
 
         config.reload(plugin.getConfig());
+        sender.sendMessage(ChatColor.GOLD + "Configs reloaded!");
     }
 
 }

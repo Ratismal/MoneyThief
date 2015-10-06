@@ -58,8 +58,6 @@ message:
   general:
     no-perms: "&4Bugger off, you don't have the right permissions!"
 
-
-
   pvp:
       # PVP messages can be processed with the following codes:
       #   %VICTIM - Player who was killed
@@ -110,6 +108,25 @@ message:
 
     # Replaces PVE death messages. Set to "none" to not change message, set to "disable" to disable it entirely.
     death-message: "none"
+
+#==================
+#      Groups
+#==================
+groups:
+  # Groups are expandable. First, name the group. Second, you need two arguments.
+  # - The first argument is the bonus they receive for killing a mob.
+  # - The second argument is the reduction they get for dying to a pve event.
+  # Here's an example:
+  #vip:
+  #- 2.0
+  #- 0.5
+  # In this example, anyone in the group 'vip' will receive twice as much
+  # for killing a mob, and half as much for dying to pve event.
+  #
+  # To use what's created here, give the player in question the permission node "moneythief.group.<name>".
+  # Thus, to use vip you would give the group in your permissions plugin "moneythief.group.vip".
+  #   - This is so that it's compatible with any permission plugin you wish to use.
+
 
 #==================
 #       Mobs
@@ -208,7 +225,7 @@ mobs:
   WITHER:
   - 150.0
   - 200.0
-  # DEFAULT will apply to any mob that's not listed here.
+  # When enabled, DEFAULT will apply to any mob that's not listed here.
   #DEFAULT:
   #- 5.0
   #- 10.0

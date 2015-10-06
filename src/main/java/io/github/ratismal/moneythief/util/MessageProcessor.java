@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
  * Created by Ratismal on 2015-10-05.
  */
 
-public class ProcessMessage {
+public class MessageProcessor {
 
     public static String processGeneral(String process) {
 

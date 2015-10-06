@@ -152,6 +152,15 @@ public class Config {
         private static HashMap<String, List<Double>> mobs = new HashMap<String, List<Double>>();
     }
 
+    public static final class Groups {
+
+        public static HashMap<String, List<Double>> getGroups() {
+            return groups;
+        }
+
+        private static HashMap<String, List<Double>> groups = new HashMap<String, List<Double>>();
+    }
+
     public Config(MoneyThief plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
@@ -200,11 +209,24 @@ public class Config {
             for (String name : mobSection.getKeys(false)) {
                 List<Double> values = mobSection.getDoubleList(name);
                 temp.put(name, values);
+                plugin.getLogger().info("Adding " + name + " to mob list");
             }
         }
-        Mobs.mobs = temp;
-    }
+        Mobs.mobs = (HashMap<String, List<Double>>) temp.clone();
+        temp.clear();
 
+        ConfigurationSection groupSection = config.getConfigurationSection("groups");
+        if (groupSection != null) {
+            for (String name : groupSection.getKeys(false)) {
+                List<Double> values = groupSection.getDoubleList(name);
+                temp.put(name, values);
+                plugin.getLogger().info("Adding " + name + " to group list");
+            }
+        }
+        Groups.groups = (HashMap<String, List<Double>>) temp.clone();
+        temp.clear();
+
+    }
 
 
 }
