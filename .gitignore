@@ -4,5 +4,4 @@ target/*
 .classpath
 .project
 MoneyThief.iml
-pom.xml
 dependency-reduced-pom.xml
