@@ -111,14 +111,14 @@ public class CommandHandler implements CommandExecutor {
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/moneythief v" + ChatColor.GOLD + " - Displays plugin version");
     }
 
-    /**
-     * Tells player plugin version
-     *
-     * @param sender player
-     */
-    void version(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.LIGHT_PURPLE + " is running on version " + plugin.getDescription().getVersion());
-    }
+        /**
+         * Tells player plugin version
+         *
+         * @param sender player
+         */
+        void version(CommandSender sender) {
+            sender.sendMessage(ChatColor.GOLD + "MoneyThief" + ChatColor.LIGHT_PURPLE + " is running on version " + plugin.getDescription().getVersion());
+        }
 
     /**
      * Tells player a list of all mobs in config, and how much they're worth
